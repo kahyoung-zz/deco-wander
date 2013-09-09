@@ -1,0 +1,47 @@
+body {
+	min-width: 100%;
+	font: 14px/1.5em "Lucida Grande", Arial, sans-serif;
+	background: #FDFDFD;
+}
+.main {
+	min-width: 100%;
+	max-width: 100%;
+}
+.login-container {
+	display: inline-block;
+	margin: 0 auto;
+}
+.button {
+	cursor: pointer;
+}
+.splash-title {
+	font-size: 72px;
+}
+.facebook-login {
+	color: white;
+	font-size: 18px;
+	font-weight: bold;
+	line-height: 40px;
+	display: inline-block;
+}
+	.facebook-login .part {
+		padding: 5px;
+		border: 1px solid black;
+		text-align: center;
+	}
+	.facebook-login .left {
+		font-size: 36px;
+		float: left;
+		width: 50px;
+		background: #2338a6;
+		border-top-left-radius: 2px;
+		border-bottom-left-radius: 2px;
+	}
+	.facebook-login .right {
+		border: 1px solid black;
+		display: inline-block;
+		width: 200px;
+		background: #365ba6;
+		border-top-right-radius: 2px;
+		border-bottom-right-radius: 2px;
+	}
