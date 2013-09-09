@@ -9,7 +9,9 @@ window.fbAsyncInit = function() {
 	});
 	
 	var uri = encodeURI('http://localhost:8000/wander');
-	FB.login();
+	$("body").click(function() {
+		FB.login();
+	});
 };
 // Load the SDK asynchronously
 (function(d, s, id){
