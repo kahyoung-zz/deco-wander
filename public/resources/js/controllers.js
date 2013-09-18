@@ -50,7 +50,7 @@ function SketchCtrl(scope, cookies, location, FB) {
 						profile_pic = processing.loadImage(profile_pic_url, "jpg");
 					}
 				} else {
-					window.location.pathname = '/';
+					processing.text('You need to go back to the root URL of the site', 500, 100);
 				}
 			}
 		};
