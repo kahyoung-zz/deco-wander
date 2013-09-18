@@ -50,7 +50,7 @@ function SketchCtrl(scope, cookies, location, FB) {
 						profile_pic = processing.loadImage(profile_pic_url, "jpg");
 					}
 				} else {
-					window.location.href = '/';
+					window.location.pathname = '/';
 				}
 			}
 		};
