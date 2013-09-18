@@ -13,7 +13,7 @@ function LoginCtrl(scope) {
 }
 
 
-function SketchCtrl(scope, cookies, FB) {
+function SketchCtrl(scope, cookies, location, FB) {
 	FB.api('/me?fields=name,hometown,picture,birthday,photos.limit(1)', function(response) {
 		scope.user = response;
 	});
@@ -31,22 +31,26 @@ function SketchCtrl(scope, cookies, FB) {
 			processing.fill(0);
 			processing.textSize(32);
 			if(scope.user) {
-				processing.text('Hello ' + scope.user.name, 500, 100);
-				processing.text('Your hometown is ' + scope.user.hometown.name, 500, 150);
-				processing.text('Your birthday is ' + scope.user.birthday, 500, 200);
-				processing.text('Heres a photo of you', 500, 250);
-				var photo_url = scope.user.photos.data[0].source;
-				var profile_pic_url = scope.user.picture.data.url;
-				if(online) { 
-					processing.image(online, 600, 300);
-				} else {
-					online = processing.loadImage(photo_url, "jpg");
-				}
+				if(!scope.user.error) {
+					if(scope.user.name) processing.text('Hello ' + scope.user.name, 500, 100);
+					if(scope.user.hometown) processing.text('Your hometown is ' + scope.user.hometown.name, 500, 150);
+					if(scope.user.birthday) processing.text('Your birthday is ' + scope.user.birthday, 500, 200);
+					if(scope.user.picture) processing.text('Heres a photo of you', 500, 250);
+					var photo_url = scope.user.photos.data[0].source;
+					var profile_pic_url = scope.user.picture.data.url;
+					if(online) { 
+						processing.image(online, 600, 300);
+					} else {
+						online = processing.loadImage(photo_url, "jpg");
+					}
 
-				if(profile_pic) {
-					processing.image(profile_pic, 400, 75);
+					if(profile_pic) {
+						processing.image(profile_pic, 400, 75);
+					} else {
+						profile_pic = processing.loadImage(profile_pic_url, "jpg");
+					}
 				} else {
-					profile_pic = processing.loadImage(profile_pic_url, "jpg");
+					window.location.href = '/';
 				}
 			}
 		};
@@ -55,4 +59,4 @@ function SketchCtrl(scope, cookies, FB) {
 
 WanderCtrl.$inject = ['$scope', '$rootScope', '$cookies', 'Facebook'];
 LoginCtrl.$inject = ['$scope'];
-SketchCtrl.$inject = ['$scope', '$cookies', 'Facebook'];
+SketchCtrl.$inject = ['$scope', '$cookies', '$location', 'Facebook'];
