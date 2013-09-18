@@ -14,15 +14,14 @@ function LoginCtrl(scope) {
 
 
 function SketchCtrl(scope, cookies, FB) {
-	FB.me(function(response) {
+	FB.api('/me?fields=name,hometown,picture,birthday,photos.limit(1)', function(response) {
 		scope.user = response;
 	});
 
-	FB.api(function(response) {
-
-	});
-
 	scope.sketch = function(processing) {
+		var profile_pic;
+		var online;
+
 		processing.setup = function() {
 			processing.size(window.innerWidth, window.innerHeight);
 		};
@@ -30,9 +29,26 @@ function SketchCtrl(scope, cookies, FB) {
 		processing.draw = function() {
 			processing.background(255);
 			processing.fill(0);
-			processing.ellipse(0, 250, 10, 10);
 			processing.textSize(32);
-			if(scope.user) processing.text('Hello ' + scope.user.name, 500, 500);
+			if(scope.user) {
+				processing.text('Hello ' + scope.user.name, 500, 100);
+				processing.text('Your hometown is ' + scope.user.hometown.name, 500, 150);
+				processing.text('Your birthday is ' + scope.user.birthday, 500, 200);
+				processing.text('Heres a photo of you', 500, 250);
+				var photo_url = scope.user.photos.data[0].source;
+				var profile_pic_url = scope.user.picture.data.url;
+				if(online) { 
+					processing.image(online, 600, 300);
+				} else {
+					online = processing.loadImage(photo_url, "jpg");
+				}
+
+				if(profile_pic) {
+					processing.image(profile_pic, 400, 75);
+				} else {
+					profile_pic = processing.loadImage(profile_pic_url, "jpg");
+				}
+			}
 		};
 	}
 }
