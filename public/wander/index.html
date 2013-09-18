@@ -1,18 +1,41 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<script type="text/javascript" src="/resources/js/globals.js"></script>
-	</head>
-	<body>
-		<canvas data-processing-sources="/resources/pde/wander_main/wander_main.pde"></canvas>
-		<script>
-			var js_userId = getCookie("wauserId");
-			var js_accessToken = getCookie(js_userId);
-		</script>
-		
-		<script type="text/javascript" src="/resources/js/jquery-1.10.2.min.js"></script>
-		<script type="text/javascript" src="/resources/js/jquery.cookie.js"></script>
-		<script type="text/javascript" src="/resources/js/processing-1.4.1.min.js"></script>
-		<script type="text/javascript" src="/resources/js/facebook.js"></script>
-	</body>
+<!doctype html>
+<html lang="en" xmls:ng="WanderApp">
+<head>
+  <meta charset="utf-8">
+  <title>Wander</title>
+  <link rel="stylesheet" href="/resources/css/styles.css"/>
+  <link rel="stylesheet" href="/resources/css/normalize.css"/>
+</head>
+<body ng-controller="WanderCtrl" ng-cloak>
+  <div id="fb-root"></div>
+  <script>
+  // Load the SDK asynchronously
+  window.fbAsyncInit = function() {
+    angular.bootstrap(document, ['WanderApp']);
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/all.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+  <canvas angular-processing="sketch" ng-controller="SketchCtrl"></canvas>
+
+
+  <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.min.js"></script>
+  -->
+  <script type="text/javascript" src="/resources/js/processing-1.4.1.min.js"></script>
+  <script src="/resources/lib/angular/angular.js"></script>
+  <script src="/resources/lib/angular/angular-cookies.min.js"></script>
+  <script src="/resources/js/app.js"></script>
+  <script src="/resources/js/services.js"></script>
+  <script src="/resources/js/controllers.js"></script>
+  <script src="/resources/js/filters.js"></script>
+  <script src="/resources/js/directives.js"></script>
+</body>
 </html>
