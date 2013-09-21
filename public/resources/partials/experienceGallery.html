@@ -1,0 +1,11 @@
+<div class="experience-gallery">
+
+	<div class="photo experience" ng-repeat="photo in photos" ng-click="loadExperience(photo)">
+		<img ng-src="{{photo.src}}" />
+	</div>
+	<div class="showcase-container" ng-show="showcase">
+		<div class="showcase">
+			<img ng-src="{{showcase.src_big}}" />
+		</div>
+	</div>
+</div>

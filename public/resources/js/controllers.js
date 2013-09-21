@@ -21,12 +21,7 @@ function SketchCtrl(scope, cookies, location, FB) {
 
 	// Runs a search function to return all necessary data about a particular location
 	FB.searchLocationByCenter('-33.8600', '151.2111', 100000, function(response) {
-		for (var i = response.length - 1; i >= 0; i--) {
-			scope[response[i].name] = response[i].fql_result_set;
-			scope.$apply(scope[response[i].name]);
-			console.log(scope);
-		};
-		console.log(response);
+		scope.$broadcast('load_experiences', response);
 	});
 
 	scope.sketch = function(processing) {
@@ -85,6 +80,27 @@ function SketchCtrl(scope, cookies, location, FB) {
 	}
 }
 
+function ExperienceCtrl(scope, rootScope, FB) {
+	scope.$on('load_experiences', sortExperiences);
+
+	function sortExperiences(event, experiences) {
+		// Sorts given experiences into categories
+		for (var i = experiences.length - 1; i >= 0; i--) {
+			scope[experiences[i].name] = experiences[i].fql_result_set;
+			scope.$apply(scope[experiences[i].name]);
+		};
+
+		scope.loadExperience = loadExperience;
+		scope.$apply(loadExperience);
+	}
+
+	function loadExperience(experience) {
+		// Loads a given experience when shown
+		scope.showcase = experience;
+	}
+}
+
 WanderCtrl.$inject = ['$scope', '$rootScope', '$cookies', 'Facebook'];
 LoginCtrl.$inject = ['$scope'];
 SketchCtrl.$inject = ['$scope', '$cookies', '$location', 'Facebook'];
+ExperienceCtrl.$inject = ['$scope', '$rootScope', 'Facebook'];

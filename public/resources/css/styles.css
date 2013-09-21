@@ -9,44 +9,26 @@ body {
 	min-width: 100%;
 	max-width: 100%;
 }
-.login-container {
-	display: inline-block;
-	margin: 0 auto;
-}
 .button {
 	cursor: pointer;
 }
 .splash-title {
 	font-size: 72px;
 }
-.experience {
+.experience-gallery .experience {
+	cursor: pointer;
 	display: inline-block;
 }
-.facebook-login {
-	color: white;
-	font-size: 18px;
-	font-weight: bold;
-	line-height: 40px;
-	display: inline-block;
+
+.experience-gallery .showcase-container {
+	position: absolute;
+	min-width: 100%;
+	max-width: 100%;
+
+	background: rgba(0, 0, 0, 0.5);
 }
-	.facebook-login .part {
-		padding: 5px;
-		border: 1px solid black;
-		text-align: center;
-	}
-	.facebook-login .left {
-		font-size: 36px;
-		float: left;
-		width: 50px;
-		background: #2338a6;
-		border-top-left-radius: 2px;
-		border-bottom-left-radius: 2px;
-	}
-	.facebook-login .right {
-		border: 1px solid black;
-		display: inline-block;
-		width: 200px;
-		background: #365ba6;
-		border-top-right-radius: 2px;
-		border-bottom-right-radius: 2px;
+
+	.experience-gallery .showcase-container .showcase {
+		width: auto;
+		margin: 0 auto;
 	}

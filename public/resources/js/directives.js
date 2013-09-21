@@ -21,6 +21,20 @@ angular.module('WanderApp.directives', ['ngCookies']).
            }
        }
   }])
+
+  .directive('experienceGallery', ['$timeout','$compile', function($timeout, $compile) {
+   return {
+        scope: {
+          experieces: '='
+        },
+        restrict: 'E', 
+        templateUrl: '/resources/partials/experienceGallery.html',
+        controller: ExperienceCtrl,
+        link: function(scope, element, attrs){
+          //   
+        }
+   };
+ }])
   
   .directive('angularProcessing', function($compile) {
    return function(scope, iElement, iAttr){
