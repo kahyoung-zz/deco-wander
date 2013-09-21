@@ -13,10 +13,12 @@ angular.module('WanderApp.directives', ['ngCookies']).
   .directive('fbButton',['Facebook', '$cookies', function(FB, $cookies){
   	return {
             restrict: 'E',
-            template: '<a href="#">Login to Facebook</a>',
+            template: '<a href="">Login to Facebook</a>',
             link: function(scope, element, attrs) {
             	element.bind('click', function(e) {
-          			FB.login();
+          			FB.login(function(response) {
+                  console.log(response);
+                });
             	});
            }
        }
