@@ -20,11 +20,13 @@ function SketchCtrl(scope, cookies, location, FB) {
 	// });
 
 	// Runs a search function to return all necessary data about a particular location
-	FB.searchLocationByCenter('11.3333', '123.0167', 10000, function(response) {
+	FB.searchLocationByCenter('-33.8600', '151.2111', 100000, function(response) {
 		for (var i = response.length - 1; i >= 0; i--) {
 			scope[response[i].name] = response[i].fql_result_set;
 			scope.$apply(scope[response[i].name]);
+			console.log(scope);
 		};
+		console.log(response);
 	});
 
 	scope.sketch = function(processing) {

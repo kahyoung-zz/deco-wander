@@ -1,7 +1,7 @@
 <div class="sub-main">
 	<div class="experience-gallery">
-		<div ng-repeat="photo in photos">
-			<img src="{{photo.src}}" />
+		<div class="experience" ng-repeat="photo in photos">
+			<img ng-src="{{photo.src}}" />
 		</div>
 	</div>
 	<canvas angular-processing="sketch"></canvas>

@@ -16,9 +16,7 @@ angular.module('WanderApp.directives', ['ngCookies']).
             template: '<a href="">Login to Facebook</a>',
             link: function(scope, element, attrs) {
             	element.bind('click', function(e) {
-          			FB.login(function(response) {
-                  console.log(response);
-                });
+          			FB.login();
             	});
            }
        }

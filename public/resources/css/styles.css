@@ -19,6 +19,9 @@ body {
 .splash-title {
 	font-size: 72px;
 }
+.experience {
+	display: inline-block;
+}
 .facebook-login {
 	color: white;
 	font-size: 18px;

@@ -59,7 +59,6 @@ angular.module('WanderApp.services', []).
             var checkins = [];
             var photos = [];
             var statuses = [];
-
             for (var i = response.data.length - 1; i >= 0; i--) {
               switch(response.data[i].type) {
                 case 'checkin' :
