@@ -42,6 +42,9 @@ angular.module('WanderApp.services', []).
         api: function(path, callback) {
           FB.api(path, callback);
         },
+        getUser: function(user, callback) {
+          FB.api('/' + user +'?fields=name,picture', callback)
+        },
         // Allows for calling of the current user
         me: function(callback) {
             FB.api('/me', callback);
@@ -79,9 +82,9 @@ angular.module('WanderApp.services', []).
             FB.api({
               method: 'fql.multiquery',
               queries: {
-                'checkins' : 'SELECT message FROM checkin WHERE checkin_id IN (' + checkins + ')',
-                'photos' : 'SELECT src, src_big, pid FROM photo WHERE object_id IN (' + photos + ')',
-                'statuses' : 'SELECT message FROM status WHERE status_id IN (' + statuses + ')'
+                'checkins' : 'SELECT author_uid, checkin_id, message FROM checkin WHERE checkin_id IN (' + checkins + ')',
+                'photos' : 'SELECT owner, place_id, src, src_big, pid FROM photo WHERE object_id IN (' + photos + ')',
+                'statuses' : 'SELECT uid, place_id, message FROM status WHERE status_id IN (' + statuses + ')'
               }
             }, callback);
           });

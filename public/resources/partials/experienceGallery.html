@@ -1,11 +1,36 @@
 <div class="experience-gallery">
-
-	<div class="photo experience" ng-repeat="photo in photos" ng-click="loadExperience(photo)">
+	<div class="checkin experience" ng-repeat="checkin in checkins" ng-click="loadExperience(checkin, 'checkin')">
+		{{checkin.message}}
+	</div>
+	<div class="photo experience" ng-repeat="photo in photos" ng-click="loadExperience(photo, 'photo')">
 		<img ng-src="{{photo.src}}" />
 	</div>
-	<div class="showcase-container" ng-show="showcase">
-		<div class="showcase">
-			<img ng-src="{{showcase.src_big}}" />
+	<div class="status experience" ng-repeat="status in statuses" ng-click="loadExperience(status, 'status')">
+		{{status.message}}
+	</div>
+
+	<div class="showcase-container" ng-model="showcase" ng-show="showcase.author">
+		<!-- This section displays information about the author -->
+		<div class="author">
+			<div class="author-picture">
+				<img ng-src="{{showcase.author.picture.data.url}}" />
+			</div>
+			<div class="author-full-name">
+				{{showcase.author.name}}
+			</div>
+		</div>
+
+		<!-- This section displays different information depending on the type showcased -->
+		<div class="showcase" ng-switch on="showcase.type">
+			<div ng-switch-when="checkin" class="showcase-checkin">
+				{{showcase.message}}
+			</div>
+			<div ng-switch-when="photo" class="showcase-photo">
+				<img ng-src="{{showcase.src_big}}" />
+			</div>
+			<div ng-switch-when="status" class="showcase-status">
+				{{showcase.message}}
+			</div>
 		</div>
 	</div>
 </div>

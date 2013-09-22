@@ -14,7 +14,10 @@ function LoginCtrl(scope) {
 
 
 function SketchCtrl(scope, cookies, location, FB) {
-	var onscreenData = [];
+	var scale = 1;
+	var prevScale = 1;
+	var tranX = window.innerWidth/2;
+	var tranY = window.innerHeight/2;
 	// FB.api('/me?fields=name,hometown,picture,birthday,photos.limit(1)', function(response) {
 	// 	scope.user = response;
 	// });
@@ -33,37 +36,11 @@ function SketchCtrl(scope, cookies, location, FB) {
 		};
 
 		processing.draw = function() {
+			processing.translate(tranX, tranY);
+			processing.scale(scale);
 			processing.background(255);
 			processing.fill(0);
-			processing.textSize(32);
-			if(onscreenData.length > 0) {
-				for (var i = onscreenData.length - 1; i >= 0; i--) {
-					processing.text(onscreenData[i].type + " from " + onscreenData[i].from.name, 100, 100 * i);
-				};
-			}
-			// if(scope.user) {
-			// 	if(!scope.user.error) {
-			// 		if(scope.user.name) processing.text('Hello ' + scope.user.name, 500, 100);
-			// 		if(scope.user.hometown) processing.text('Your hometown is ' + scope.user.hometown.name, 500, 150);
-			// 		if(scope.user.birthday) processing.text('Your birthday is ' + scope.user.birthday, 500, 200);
-			// 		if(scope.user.picture) processing.text('Heres a photo of you', 500, 250);
-			// 		var photo_url = scope.user.photos.data[0].source;
-			// 		var profile_pic_url = scope.user.picture.data.url;
-			// 		if(online) { 
-			// 			processing.image(online, 600, 300);
-			// 		} else {
-			// 			online = processing.loadImage(photo_url, "jpg");
-			// 		}
-
-			// 		if(profile_pic) {
-			// 			processing.image(profile_pic, 400, 75);
-			// 		} else {
-			// 			profile_pic = processing.loadImage(profile_pic_url, "jpg");
-			// 		}
-			// 	} else {
-			// 		processing.text('You need to go back to the root URL of the site', 500, 100);
-			// 	}
-			// }
+			processing.ellipse(0, 0, 100, 100);
 		};
 
 		function clickLocation(location) {
@@ -77,6 +54,15 @@ function SketchCtrl(scope, cookies, location, FB) {
 		function getMore(url) {
 			// Run get request
 		}
+	}
+
+	scope.zoom = function(touch_scale) {
+		scale *= (touch_scale/prevScale);
+		prevScale = touch_scale;
+	}
+
+	scope.touchEnd = function() {
+		prevScale = 1;
 	}
 }
 
@@ -94,9 +80,42 @@ function ExperienceCtrl(scope, rootScope, FB) {
 		scope.$apply(loadExperience);
 	}
 
-	function loadExperience(experience) {
+	function loadExperience(experience, type) {
 		// Loads a given experience when shown
 		scope.showcase = experience;
+		scope.showcase.type = type;
+		switch(type) {
+			case 'checkin' :
+				loadCheckin(experience);
+				break;
+			case 'photo' :
+				loadPhoto(experience);
+				break;
+			case 'status' :
+				loadStatus(experience);
+				break;
+		}
+	}
+
+	function loadCheckin(checkin) {
+		FB.getUser(checkin.author_uid, function(response) {
+			scope.showcase.author = response;
+			scope.$apply(scope.showcase);
+		});
+	}
+
+	function loadPhoto(photo) {
+		FB.getUser(photo.owner, function(response) {
+			scope.showcase.author = response;
+			scope.$apply(scope.showcase);
+		});
+	}
+
+	function loadStatus(status) {
+		FB.getUser(status.uid, function(response) {
+			scope.showcase.author = response;
+			scope.$apply(scope.showcase);
+		});
 	}
 }
 
