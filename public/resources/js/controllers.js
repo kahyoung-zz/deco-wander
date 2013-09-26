@@ -67,17 +67,69 @@ function SketchCtrl(scope, cookies, location, FB) {
 }
 
 function ExperienceCtrl(scope, rootScope, FB) {
+	var places = [];
+	places.indexing = [];
 	scope.$on('load_experiences', sortExperiences);
+
+	function indexById(id) {
+
+		for (var i = places.indexing.length - 1; i >= 0; i--) {
+			if(places.indexing[i] === id) {
+				return i;
+			}
+		};
+
+		return -1;
+	}
 
 	function sortExperiences(event, experiences) {
 		// Sorts given experiences into categories
 		for (var i = experiences.length - 1; i >= 0; i--) {
-			scope[experiences[i].name] = experiences[i].fql_result_set;
-			scope.$apply(scope[experiences[i].name]);
+			var type = undefined;
+			switch (experiences[i].name) {
+				case 'checkins' :
+				break;
+				case 'photos' :
+					if(!type) type = "photo";
+				case 'statuses' :
+					if(!type) type = "status";
+					for (var j = experiences[i].fql_result_set.length - 1; j >= 0; j--) {
+						var experience = experiences[i].fql_result_set[j];
+						var index = indexById(experience.place_id);
+						experience.type = type;
+						if(index != -1) {
+							places[index].experiences = places[index].experiences.concat(experience);
+						} else {
+							places.push({
+								'id' : experience.place_id,
+								'experiences' : experience
+							});
+							places.indexing.push(experience.place_id);
+						}
+					};
+					break;
+				case 'places' :
+					for (var j = experiences[i].fql_result_set.length - 1; j >= 0; j--) {
+						var place = experiences[i].fql_result_set[j];
+						var index = indexById(place.page_id);
+						if(index != -1) {
+							if(!places[index].name) places[index].name = place.name;
+						} else {
+							places.push({
+								'id' : place.page_id,
+								'name' : place.name,
+								'experiences' : []
+							});
+							places.indexing.push(place.page_id);
+						}
+					};
+				break;
+			}
 		};
-
 		scope.loadExperience = loadExperience;
-		scope.$apply(loadExperience);
+		scope.getExperiencesByPlace = getExperiencesByPlace;
+		scope.places = places;
+		scope.$apply();
 	}
 
 	function loadExperience(experience, type) {
@@ -94,6 +146,27 @@ function ExperienceCtrl(scope, rootScope, FB) {
 			case 'status' :
 				loadStatus(experience);
 				break;
+		}
+	}
+
+	function getExperiencesByPlace(id) {
+		var index = indexById(id);
+		if(!places[index].paging) {
+			FB.getExperiencesByPlace(id, function(response) {
+				places[index].paging = response.paging;
+				var sorted = FB.sortExperiencesByType(response.data);
+				FB.getExtendedInformation(sorted, function(response){ 
+					sortExperiences(null, response);
+				});
+			});
+		} else {
+			FB.getExperiencesByPlacePaging(places[index].paging.next, function(response) {
+				places[index].paging = response.paging;
+				var sorted = FB.sortExperiencesByType(response.data);
+				FB.getExtendedInformation(sorted, function(response) {
+					sortExperiences(null, response);
+				});
+			});
 		}
 	}
 

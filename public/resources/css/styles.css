@@ -2,12 +2,10 @@ body {
 	min-width: 100%;
 	font: 14px/1.5em "Lucida Grande", Arial, sans-serif;
 	background: #FDFDFD;
-	overflow: hidden;
 }
 .ng-cloak { display: none;}
 .main {
 	min-width: 100%;
-	max-width: 100%;
 }
 .button {
 	cursor: pointer;
@@ -15,20 +13,14 @@ body {
 .splash-title {
 	font-size: 72px;
 }
-.experience-gallery .experience {
-	cursor: pointer;
+#sketch_canvas {
+	display: none;
+}
+
+.experience-gallery .place-container {
 	display: inline-block;
+	border: thin solid black;
+	cursor: pointer;
+	padding: 5px;
+	margin: 5px;
 }
-
-.experience-gallery .showcase-container {
-	position: absolute;
-	min-width: 100%;
-	max-width: 100%;
-
-	background: rgba(0, 0, 0, 0.5);
-}
-
-	.experience-gallery .showcase-container .showcase {
-		width: auto;
-		margin: 0 auto;
-	}
