@@ -6,7 +6,7 @@
 // Demonstrate how to register services
 // In this case it is a simple value service.
 angular.module('WanderApp.services', []).
-  factory('Facebook', ['$rootScope', '$window', '$cookies', '$location', function($rootScope, $window, $cookies, $location) {
+  factory('Facebook', ['$rootScope', '$window', '$cookies', '$location', '$http', function($rootScope, $window, $cookies, $location, $http) {
 	  //get FB from the global (window) variable.
     var FB = $window.FB;
 
@@ -36,11 +36,53 @@ angular.module('WanderApp.services', []).
       }
     });
 
+    function sortByType(experiences){
+      var checkins = [];
+      var photos = [];
+      var statuses = [];
+      var returnObject = {};
+      for (var i = experiences.length - 1; i >= 0; i--) {
+        switch(experiences[i].type) {
+          case 'checkin' :
+            checkins.push(experiences[i].id);
+            break;
+          case 'photo' :
+            photos.push(experiences[i].id);
+            break;
+          case 'status' :
+            statuses.push(experiences[i].id);
+            break;
+          default:
+            console.log(experiences[i].type);
+            break;
+        }
+      };
+      returnObject['checkins'] = checkins;
+      returnObject['photos'] = photos;
+      returnObject['statuses'] = statuses;
+
+      return returnObject;
+    }
+
+    function getExtendedInformation(sorted, callback) {
+      FB.api({
+        method: 'fql.multiquery',
+        queries: {
+          'checkins' : 'SELECT author_uid, checkin_id, message FROM checkin WHERE checkin_id IN (' + sorted.checkins + ')',
+          'photos' : 'SELECT owner, place_id, src, src_big, pid FROM photo WHERE object_id IN (' + sorted.photos + ')',
+          'statuses' : 'SELECT uid, place_id, message FROM status WHERE status_id IN (' + sorted.statuses + ')',
+          'places' : 'SELECT page_id, name, is_city, display_subtext FROM place WHERE page_id IN (SELECT place_id FROM #photos)'
+        }
+      }, callback);
+    }
     // Return function which in turn calls the Facebook JavascriptSDK
     return {
         // Allows for custom calling of the GraphAPI
         api: function(path, callback) {
           FB.api(path, callback);
+        },
+        getUser: function(user, callback) {
+          FB.api('/' + user +'?fields=name,picture', callback)
         },
         // Allows for calling of the current user
         me: function(callback) {
@@ -55,36 +97,22 @@ angular.module('WanderApp.services', []).
         	FB.login(callback, FBscope);
         },
         searchLocationByCenter : function(lat, longit, distance, callback) {
-          FB.api('/search?type=location&center=' + lat + ',' + longit  +'&distance=' + distance+ '&fields=id,type', function(response) {
-            var checkins = [];
-            var photos = [];
-            var statuses = [];
-            for (var i = response.data.length - 1; i >= 0; i--) {
-              switch(response.data[i].type) {
-                case 'checkin' :
-                  checkins.push(response.data[i].id);
-                  break;
-                case 'photo' :
-                  photos.push(response.data[i].id);
-                  break;
-                case 'status' :
-                  statuses.push(response.data[i].id);
-                  break;
-                default:
-                  console.log(response.data[i].type);
-                  break;
-              }
-            };
-
-            FB.api({
-              method: 'fql.multiquery',
-              queries: {
-                'checkins' : 'SELECT message FROM checkin WHERE checkin_id IN (' + checkins + ')',
-                'photos' : 'SELECT src, src_big, pid FROM photo WHERE object_id IN (' + photos + ')',
-                'statuses' : 'SELECT message FROM status WHERE status_id IN (' + statuses + ')'
-              }
-            }, callback);
+          FB.api('/search?type=location&center=' + lat + ',' + longit  +'&distance=' + distance+ '&fields=id,type&limit=25', function(response) {
+            var experiences = sortByType(response.data);
+            getExtendedInformation(experiences, callback);
           });
+        },
+        getExperiencesByPlace : function(id, callback) {
+          FB.api('/search?type=location&place=' + id + '&fields=id,type', callback);
+        },
+        getExperiencesByPlacePaging : function(url, callback) {
+          $http.get(url).success(callback);
+        },
+        sortExperiencesByType : function(experiences) {
+          return sortByType(experiences);
+        },
+        getExtendedInformation : function(sorted, callback) {
+          getExtendedInformation(sorted, callback);
         }
     }
   }])

@@ -24,9 +24,6 @@ angular.module('WanderApp.directives', ['ngCookies']).
 
   .directive('experienceGallery', ['$timeout','$compile', function($timeout, $compile) {
    return {
-        scope: {
-          experieces: '='
-        },
         restrict: 'E', 
         templateUrl: '/resources/partials/experienceGallery.html',
         controller: ExperienceCtrl,
@@ -39,5 +36,19 @@ angular.module('WanderApp.directives', ['ngCookies']).
   .directive('angularProcessing', function($compile) {
    return function(scope, iElement, iAttr){
         scope.$processing = new Processing(iElement[0], scope[iAttr.angularProcessing]);
+
+        Hammer(iElement[0]).on("pinch", function(event) {
+          event.preventDefault();
+          scope.zoom(event.gesture.scale);
+        });
+
+        Hammer(iElement[0]).on("doubletap", function(event) {
+          event.preventDefault();
+        });
+        Hammer(iElement[0]).on("touchend", function(event) {
+          scope.touchEnd();
+        });
+
+        Hammer(iElement)
    };
  });
