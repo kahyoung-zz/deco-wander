@@ -67,6 +67,7 @@ function SketchCtrl(scope, cookies, location, FB) {
 }
 
 function ExperienceCtrl(scope, rootScope, FB) {
+	var regionPaging;
 	var places = [];
 	places.indexing = [];
 	scope.$on('load_experiences', sortExperiences);
@@ -128,8 +129,26 @@ function ExperienceCtrl(scope, rootScope, FB) {
 		};
 		scope.loadExperience = loadExperience;
 		scope.getExperiencesByPlace = getExperiencesByPlace;
+		scope.getMorePlaces = getMorePlaces;
 		scope.places = places;
 		scope.$apply();
+	}
+
+	function addNewPlaces(placeArray) {
+		var addedPlaces = [];
+		for (var i = placeArray.length - 1; i >= 0; i--) {
+			if(indexById(placeArray[i].id) == -1) {
+				places.indexing.push(placeArray[i].id);
+				places.push({
+					'id' : placeArray[i].id,
+					'name' : placeArray[i].name,
+					'experiences' : []
+				});
+				addedPlaces.push(placeArray[i]);
+			}
+		};
+
+		return addedPlaces;
 	}
 
 	function loadExperience(experience, type) {
@@ -155,17 +174,42 @@ function ExperienceCtrl(scope, rootScope, FB) {
 			FB.getExperiencesByPlace(id, function(response) {
 				places[index].paging = response.paging;
 				var sorted = FB.sortExperiencesByType(response.data);
+
 				FB.getExtendedInformation(sorted, function(response){ 
 					sortExperiences(null, response);
 				});
 			});
 		} else {
-			FB.getExperiencesByPlacePaging(places[index].paging.next, function(response) {
+			FB.getNewPage(places[index].paging.next, function(response) {
 				places[index].paging = response.paging;
 				var sorted = FB.sortExperiencesByType(response.data);
+
 				FB.getExtendedInformation(sorted, function(response) {
 					sortExperiences(null, response);
 				});
+			});
+		}
+	}
+
+	function getMorePlaces(keywords) {
+		if(regionPaging) {
+			FB.getNewPage(regionPaging.next + "&q=" + keywords, function(response) { 
+				regionPaging = response.paging;
+				var addedPlaces = addNewPlaces(response.data);
+
+				for (var i = addedPlaces.length - 1; i >= 0; i--) {
+					getExperiencesByPlace(addedPlaces[i].id);
+				};
+			});
+		} else {
+			FB.findPlacesByKeywords(keywords, function(response) {
+				regionPaging = response.paging;
+
+				var addedPlaces = addNewPlaces(response.data);
+
+				for (var i = addedPlaces.length - 1; i >= 0; i--) {
+					getExperiencesByPlace(addedPlaces[i].id);
+				};
 			});
 		}
 	}

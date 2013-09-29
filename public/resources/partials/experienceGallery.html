@@ -1,6 +1,6 @@
 <div class="experience-gallery">
 	<div class="place-container" ng-repeat="place in places" ng-click="getExperiencesByPlace(place.id)">
-		<h5 ng-bind="place.name"></h5>
+		<h5 ng-bind="place.name + ' ' + place.id"></h5>
 
 		<span class="experience-container" ng-repeat="experience in place.experiences">
 			<span class="experience-content" ng-switch on="experience.type">

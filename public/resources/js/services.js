@@ -96,6 +96,9 @@ angular.module('WanderApp.services', []).
         login : function(callback) {
         	FB.login(callback, FBscope);
         },
+        findPlacesByKeywords: function(keywords, callback) {
+          FB.api('/search?type=place&q='+keywords+'&fields=id,name', callback);
+        },
         searchLocationByCenter : function(lat, longit, distance, callback) {
           FB.api('/search?type=location&center=' + lat + ',' + longit  +'&distance=' + distance+ '&fields=id,type&limit=25', function(response) {
             var experiences = sortByType(response.data);
@@ -105,7 +108,7 @@ angular.module('WanderApp.services', []).
         getExperiencesByPlace : function(id, callback) {
           FB.api('/search?type=location&place=' + id + '&fields=id,type', callback);
         },
-        getExperiencesByPlacePaging : function(url, callback) {
+        getNewPage : function(url, callback) {
           $http.get(url).success(callback);
         },
         sortExperiencesByType : function(experiences) {
