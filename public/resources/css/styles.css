@@ -2,10 +2,12 @@ body {
 	min-width: 100%;
 	font: 14px/1.5em "Lucida Grande", Arial, sans-serif;
 	background: #FDFDFD;
+	overflow: hidden;
 }
 .ng-cloak { display: none;}
 .main {
 	min-width: 100%;
+	overflow: hidden;
 }
 .button {
 	cursor: pointer;
@@ -23,4 +25,19 @@ body {
 	cursor: pointer;
 	padding: 5px;
 	margin: 5px;
+}
+
+.itinerary .experience-container{
+	min-width: 200px;
+	min-height: 200px;
+	width: auto;
+	height: auto;
+	border: thin dashed black;
+}
+
+.showcase-container{
+	position: absolute;
+	background: black;
+	min-width: 100%;
+	min-height: 100%;
 }

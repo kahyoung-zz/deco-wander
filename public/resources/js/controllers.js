@@ -69,6 +69,7 @@ function SketchCtrl(scope, cookies, location, FB) {
 function ExperienceCtrl(scope, rootScope, FB) {
 	var regionPaging;
 	var places = [];
+	scope.iExperiences = [];
 	places.indexing = [];
 	scope.$on('load_experiences', sortExperiences);
 
@@ -81,6 +82,17 @@ function ExperienceCtrl(scope, rootScope, FB) {
 		};
 
 		return -1;
+	}
+
+	scope.openExperience = function(experience) { 
+		console.log('hey');
+		scope.showcase = experience;
+		scope.closeExperience = closeExperience;
+	}
+
+	function closeExperience() {
+		scope.showcase = null;
+		scope.closeExperience = null;
 	}
 
 	function sortExperiences(event, experiences) {

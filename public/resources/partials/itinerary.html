@@ -1,0 +1,12 @@
+<div class="itinerary">
+	<div class="itinerary experience-container" btf-dragon="iExperience in iExperiences">
+		<span class="iExperience-container" ng-switch on="iExperience.type">
+			<span class="photo" ng-switch-when="photo">
+				<img ng-src="{{iExperience.src}}" />
+			</span>
+			<span ng-switch-when="status">
+				This is where the status goes
+			</span>
+		</span>
+	</div>
+</div>

@@ -22,10 +22,43 @@ angular.module('WanderApp.directives', ['ngCookies']).
        }
   }])
 
+  .directive('stopEvent', function() {
+    return {
+      restrict: 'E',
+      link: function(scope, element, attrs) {
+        element.bind(attr.stopEvent, function(e) {
+          e.stopPropagation();
+        })
+      }
+    }
+  })
+
   .directive('experienceGallery', ['$timeout','$compile', function($timeout, $compile) {
    return {
         restrict: 'E', 
         templateUrl: '/resources/partials/experienceGallery.html',
+        controller: ExperienceCtrl,
+        link: function(scope, element, attrs){
+          //   
+        }
+   };
+ }])
+
+  .directive('itinerary', ['$timeout','$compile', function($timeout, $compile) {
+   return {
+        restrict: 'E', 
+        templateUrl: '/resources/partials/itinerary.html',
+        controller: ExperienceCtrl,
+        link: function(scope, element, attrs){
+          //   
+        }
+   };
+ }])
+
+  .directive('experienceShowcase', ['$timeout','$compile', function($timeout, $compile) {
+   return {
+        restrict: 'E', 
+        templateUrl: '/resources/partials/showcase.html',
         controller: ExperienceCtrl,
         link: function(scope, element, attrs){
           //   
