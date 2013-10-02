@@ -18,16 +18,56 @@ body {
 #sketch_canvas {
 	display: none;
 }
-
+.experience-stream {
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+}
+.experience-gallery {
+	width: 100%;
+	height: 500px;
+	overflow-x: scroll;
+	overflow-y: hidden;
+	white-space: nowrap;
+}
 .experience-gallery .place-container {
+	width: 660px;
+	height: 1000px;
 	display: inline-block;
-	border: thin solid black;
-	cursor: pointer;
 	padding: 5px;
-	margin: 5px;
+	margin: 0 5px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+.experience-gallery .place-name.header {
+	margin-bottom: 5px;
+	font-size: 2em;
+	line-height: 1em;
+	color: #444444;
+	cursor: pointer;
 }
 
-.itinerary .experience-container{
+.experience-gallery .photo-thumb{
+	width: 150px;
+	height: 150px;
+	background-size: cover;
+	background-position: 50% 25%;
+}
+
+.experience-gallery .photo-thumb img{
+	display: none;
+}
+
+.experience-gallery .experience{
+	float: left;
+	margin: 5px;
+}
+.itinerary {
+	height: 100px;
+	width: 100%;
+	border: thin dashed #ADADAD;
+}
+.itinerary .experiences-container{
 	min-width: 200px;
 	min-height: 200px;
 	width: auto;

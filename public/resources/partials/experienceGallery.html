@@ -1,17 +1,14 @@
 <div class="experience-gallery">
-	<div class="place-container" ng-repeat="place in places" ng-click="getExperiencesByPlace(place.id)" ng-show="place.experiences.length > 0" stop-event="click">
-		<h5 ng-bind="place.name + ' ' + place.id"></h5>
+	<div class="place-container" ng-repeat="place in places" ng-show="place.experiences.length > 0" >
+		<div class="place-name header" ng-bind="place.name" ng-click="getExperiencesByPlace(place.id)" stop-event="click"></div>
 
-		<span class="experience-container" btf-dragon="experience in place.experiences" stop-event="click">
-			<span class="experience-content" ng-switch on="experience.type">
-				<span class="photo" ng-switch-when="photo">
-					<img ng-src="{{experience.src}}" />
-				</span>
-				<span ng-switch-when="status">
-					This is where the status goes
-				</span>
-			</span>
-		</span>
+		<div class="experiences-container" btf-dragon="experience in place.experiences" stop-event="click">
+			<div class="experience" ng-switch on="experience.type" ng-show="experience.type == 'photo'">
+				<div class="photo-thumb" ng-switch-when="photo" ng-style="{'background-image': 'url(' + experience.src_big + ')'}">
+					<img ng-src="{{experience.src}}">
+				</div>
+			</div>
+		</div>
 
 	</div>
 </div>
