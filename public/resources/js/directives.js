@@ -37,7 +37,6 @@ angular.module('WanderApp.directives', ['ngCookies']).
    return {
         restrict: 'E', 
         templateUrl: '/resources/partials/experienceGallery.html',
-        controller: ExperienceCtrl,
         link: function(scope, element, attrs){
           //   
         }
@@ -48,7 +47,6 @@ angular.module('WanderApp.directives', ['ngCookies']).
    return {
         restrict: 'E', 
         templateUrl: '/resources/partials/itinerary.html',
-        controller: ExperienceCtrl,
         link: function(scope, element, attrs){
           //   
         }
@@ -59,29 +57,8 @@ angular.module('WanderApp.directives', ['ngCookies']).
    return {
         restrict: 'E', 
         templateUrl: '/resources/partials/showcase.html',
-        controller: ExperienceCtrl,
         link: function(scope, element, attrs){
           //   
         }
    };
- }])
-  
-  .directive('angularProcessing', function($compile) {
-   return function(scope, iElement, iAttr){
-        scope.$processing = new Processing(iElement[0], scope[iAttr.angularProcessing]);
-
-        Hammer(iElement[0]).on("pinch", function(event) {
-          event.preventDefault();
-          scope.zoom(event.gesture.scale);
-        });
-
-        Hammer(iElement[0]).on("doubletap", function(event) {
-          event.preventDefault();
-        });
-        Hammer(iElement[0]).on("touchend", function(event) {
-          scope.touchEnd();
-        });
-
-        Hammer(iElement)
-   };
- });
+ }]);

@@ -13,57 +13,43 @@ function LoginCtrl(scope) {
 }
 
 
-function SketchCtrl(scope, cookies, location, FB) {
-	var scale = 1;
-	var prevScale = 1;
-	var tranX = window.innerWidth/2;
-	var tranY = window.innerHeight/2;
-	// FB.api('/me?fields=name,hometown,picture,birthday,photos.limit(1)', function(response) {
-	// 	scope.user = response;
-	// });
+function MapCtrl(scope, cookies, location, FB) {
+	var map;
+	var geocoder = new google.maps.Geocoder();
 
-	// Runs a search function to return all necessary data about a particular location
-	FB.searchLocationByCenter('-33.8600', '151.2111', 100000, function(response) {
-		scope.$broadcast('load_experiences', response);
+	var mapOptions = {
+	    minZoom: 3,
+	    maxZoom: 6,
+	    zoom: 4,
+	    center: new google.maps.LatLng(-25.0000, 135.000),
+	    mapTypeId: google.maps.MapTypeId.ROADMAP
+	};
+
+	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+	google.maps.event.addListener(map, 'click', function(e) {
+		var geocoderOptions = {
+			'latLng' : e.latLng
+		}
+		geocoder.geocode(geocoderOptions, function(results, status) {
+			if (status == google.maps.GeocoderStatus.OK) {
+				if(results[1]) {
+					var adminLevel = results[results.length - 2];
+					var region = adminLevel.address_components[0].short_name;
+					var country = adminLevel.address_components[1].short_name;
+					
+					FB.findPlacesByKeywords([region, country], function(response) {
+						scope.$broadcast('load_experiences', response.data);
+						scope.$apply();
+					});
+				} else { 
+					console.log('Geocoder: No results found');
+				}
+			} else {
+				console.log('Geocoder has failed because: ' + status);
+			}
+		});
 	});
-
-	scope.sketch = function(processing) {
-		var profile_pic;
-		var online;
-
-		processing.setup = function() {
-			processing.size(window.innerWidth, window.innerHeight);
-		};
-
-		processing.draw = function() {
-			processing.translate(tranX, tranY);
-			processing.scale(scale);
-			processing.background(255);
-			processing.fill(0);
-			processing.ellipse(0, 0, 100, 100);
-		};
-
-		function clickLocation(location) {
-			// Show loading screen
-			FB.searchLocationByCenter(location['lat'], location['lon'], location['dist'], function(response) {
-				onscreenData = onscreenData.concat(response.data);
-				// assign paging information
-			});
-		}
-
-		function getMore(url) {
-			// Run get request
-		}
-	}
-
-	scope.zoom = function(touch_scale) {
-		scale *= (touch_scale/prevScale);
-		prevScale = touch_scale;
-	}
-
-	scope.touchEnd = function() {
-		prevScale = 1;
-	}
 }
 
 function ExperienceCtrl(scope, rootScope, FB) {
@@ -71,7 +57,7 @@ function ExperienceCtrl(scope, rootScope, FB) {
 	var places = [];
 	scope.iExperiences = [];
 	places.indexing = [];
-	scope.$on('load_experiences', sortExperiences);
+	scope.$on('load_experiences', initStream);
 
 	function indexById(id) {
 
@@ -85,7 +71,6 @@ function ExperienceCtrl(scope, rootScope, FB) {
 	}
 
 	scope.openExperience = function(experience) { 
-		console.log('hey');
 		scope.showcase = experience;
 		scope.closeExperience = closeExperience;
 	}
@@ -93,6 +78,45 @@ function ExperienceCtrl(scope, rootScope, FB) {
 	function closeExperience() {
 		scope.showcase = null;
 		scope.closeExperience = null;
+	}
+
+	function initStream(event, initPlaces) {
+		places = [];
+		places.indexing = [];
+		scope.showStream = false;
+		scope.$apply();
+		var callback = null;
+		for (var i = initPlaces.length - 1; i >= 0; i--) {
+			var index = indexById(initPlaces[i].id);
+			if(index != -1) {
+				if(!places[index].name) {
+					places[index].name = initPlaces[i].name;
+				} 
+			} else {
+				places.push({
+					'id' : initPlaces[i].id,
+					'name' : initPlaces[i].name,
+					'experiences' : []
+				});
+
+				places.indexing.push(initPlaces[i].id);
+				console.log(initPlaces[i].id);
+				getExperiencesByPlace(initPlaces[i].id);
+			}
+		};
+		scope.showStream = true;
+		scope.backToMap = backToMap;
+		scope.loadExperience = loadExperience;
+		scope.getExperiencesByPlace = getExperiencesByPlace;
+		scope.getMorePlaces = getMorePlaces;
+		scope.places = places;
+		scope.$apply();
+	}
+	function backToMap() {
+		places = [];
+		places.indexing = [];
+		scope.showStream = false;
+		scope.$apply;
 	}
 
 	function sortExperiences(event, experiences) {
@@ -182,6 +206,7 @@ function ExperienceCtrl(scope, rootScope, FB) {
 
 	function getExperiencesByPlace(id) {
 		var index = indexById(id);
+		console.log(id);
 		if(!places[index].paging) {
 			FB.getExperiencesByPlace(id, function(response) {
 				places[index].paging = response.paging;
@@ -250,5 +275,5 @@ function ExperienceCtrl(scope, rootScope, FB) {
 
 WanderCtrl.$inject = ['$scope', '$rootScope', '$cookies', 'Facebook'];
 LoginCtrl.$inject = ['$scope'];
-SketchCtrl.$inject = ['$scope', '$cookies', '$location', 'Facebook'];
+MapCtrl.$inject = ['$scope', '$cookies', '$location', 'Facebook'];
 ExperienceCtrl.$inject = ['$scope', '$rootScope', 'Facebook'];

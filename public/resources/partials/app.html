@@ -1,9 +1,14 @@
 <div class="sub-main">
 	<photo-showcase ng-show="showcase"></photo-showcase>
-	<div class="experience-stream">
-		<experience-gallery></experience-gallery>
-		<h3 ng-click="getMorePlaces(['Sydney', 'NSW'])" style="cursor: pointer">LOAD MORE PLACES</h3>
-		<itinerary></itinerary>
+	<div class="experience-stream" ng-show="showStream" ng-controller="ExperienceCtrl">
+		<div class="experience-gallery-container">
+			<experience-gallery></experience-gallery>
+			<div>
+				<span ng-click="backToMap()" style="cursor: pointer">BACK TO MAP |</span>
+				<span ng-click="getMorePlaces(['Sydney', 'NSW'])" style="cursor: pointer"> LOAD MORE PLACES</span>
+			</div>
+			<itinerary></itinerary>
+		</div>
 	</div>
-	<canvas angular-processing="sketch" id="sketch_canvas"></canvas>
+	<div id="map-canvas"></div>
 </div>

@@ -1,5 +1,5 @@
 <div class="experience-gallery">
-	<div class="place-container" ng-repeat="place in places" ng-show="place.experiences.length > 0" >
+	<div class="place-container" ng-repeat="place in places">
 		<div class="place-name header" ng-bind="place.name" ng-click="getExperiencesByPlace(place.id)" stop-event="click"></div>
 
 		<div class="experiences-container" btf-dragon="experience in place.experiences" stop-event="click">
@@ -10,5 +10,5 @@
 			</div>
 		</div>
 
-	</div>
-</div>
+	</div>	
+</div> 
