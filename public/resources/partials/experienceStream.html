@@ -1,0 +1,11 @@
+<div class="experience-stream" ng-show="showStream">
+	<experience-showcase ng-show="showcase"></experience-showcase>
+	<div class="experience-gallery-container">
+		<experience-gallery></experience-gallery>
+		<div>
+			<span ng-click="backToMap()" style="cursor: pointer">BACK TO MAP |</span>
+			<span ng-click="getMorePlaces(['Sydney', 'NSW'])" style="cursor: pointer"> LOAD MORE PLACES</span>
+		</div>
+		<itinerary></itinerary>
+	</div>
+</div>

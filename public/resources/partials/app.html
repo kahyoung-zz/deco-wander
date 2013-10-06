@@ -1,14 +1,26 @@
 <div class="sub-main">
-	<photo-showcase ng-show="showcase"></photo-showcase>
-	<div class="experience-stream" ng-show="showStream" ng-controller="ExperienceCtrl">
-		<div class="experience-gallery-container">
-			<experience-gallery></experience-gallery>
-			<div>
-				<span ng-click="backToMap()" style="cursor: pointer">BACK TO MAP |</span>
-				<span ng-click="getMorePlaces(['Sydney', 'NSW'])" style="cursor: pointer"> LOAD MORE PLACES</span>
+	<div class="logo">
+		<img src="/resources/images/logo_transparent.png">
+	</div>
+	<div class="top">
+		<div class="drag-me-container">
+			<div class="drag-words">Drag me</div>
+			<div class="drag-man">
 			</div>
-			<itinerary></itinerary>
+			<div class="drag-words">to a destination</div>
+		</div>
+		<div id="blur-map" class="blur"></div>
+	</div>
+	<experience-stream></experience-stream>
+	<div id="map-canvas"></div>
+	<div class="bottom">
+		<div class="logout button" ng-click="logout()">
+			<div class="button-part left">
+				f
+			</div>
+			<div class="button-part right">
+				Logout of Facebook
+			</div>
 		</div>
 	</div>
-	<div id="map-canvas"></div>
 </div>

@@ -75,6 +75,18 @@ angular.module('WanderApp.services', []).
         }
       }, callback);
     }
+
+    function getUserAndPlaceInformation(experience, callback) {
+      if(experience.owner && experience.place_id) {
+        FB.api({
+          method: 'fql.multiquery',
+          queries: {
+            'user' : 'SELECT nameFROM checkin WHERE checkin_id IN (' + sorted.checkins + ')',
+            'place' : 'SELECT owner, place_id, src, src_big, pid FROM photo WHERE object_id IN (' + sorted.photos + ')'
+          }
+        }, callback);
+      }
+    }
     // Return function which in turn calls the Facebook JavascriptSDK
     return {
         // Allows for custom calling of the GraphAPI
@@ -83,6 +95,9 @@ angular.module('WanderApp.services', []).
         },
         getUser: function(user, callback) {
           FB.api('/' + user +'?fields=name,picture', callback)
+        },
+        getPlace: function(place, callback) {
+          FB.api('/' + place + '?fields=name', callback);
         },
         // Allows for calling of the current user
         me: function(callback) {
@@ -94,7 +109,12 @@ angular.module('WanderApp.services', []).
         },
         // Calls popup of Facebook login
         login : function(callback) {
-        	FB.login(callback, FBscope);
+          FB.login(callback, FBscope);
+        },
+        logout : function() {
+          FB.logout(function(response){
+            window.location.href = '/';
+          });
         },
         findPlacesByKeywords: function(keywords, callback) {
           FB.api('/search?type=place&q='+keywords+'&fields=id,name', callback);
@@ -116,6 +136,25 @@ angular.module('WanderApp.services', []).
         },
         getExtendedInformation : function(sorted, callback) {
           getExtendedInformation(sorted, callback);
+        },
+        getPlacesByCoords : function(lat, lon, callback) {
+          FB.api('/search?type=place&q=*&center=' + lat + ',' + lon + '&fields=id', callback);
+        },
+        getPlacesWithExperiencesByCoords : function(lat, lon, callback) {
+          this.getPlacesByCoords(lat, lon, function(response) {
+            var places = [];
+            for (var i = response.data.length - 1; i >= 0; i--) {
+              places.push(response.data[i].id);
+            };
+            console.log(places);
+          });
+          //   FB.api({
+          //     method: 'fql',
+          //     query: {
+          //       'SELECT id'
+          //     }
+          //   }, callback);
+          // })
         }
     }
   }])

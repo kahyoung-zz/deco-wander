@@ -7,6 +7,7 @@ function WanderCtrl(scope, rootScope, cookies, FB) {
 	// 		status     : true,                                 // Check Facebook Login status
 	// 		xfbml      : true                                  // Look for social plugins on the page
 	// 	});
+	scope.logout = FB.logout;
 }
 
 function LoginCtrl(scope) {
@@ -15,17 +16,122 @@ function LoginCtrl(scope) {
 
 function MapCtrl(scope, cookies, location, FB) {
 	var map;
+	var blurMap;
 	var geocoder = new google.maps.Geocoder();
 
+	var mapStyles = [
+		{
+			featureType: "water",
+			elementType: "labels",
+			stylers: [
+				{
+					visibility: "off",
+				}
+			]
+		},
+		{
+			featureType: "water",
+			stylers: [
+				{
+					color: "#F8F8F8",
+				}
+			]
+		},
+		{
+			featureType: "poi",
+			stylers: [
+				{
+					visibility: "off",
+				}
+			]
+		},
+		{
+			featureType: "road",
+			stylers: [
+				{
+					visibility: "off",
+				}
+			]
+		},
+		{
+			featureType: "transit",
+			stylers: [
+				{
+					visibility: "off",
+				}
+			]
+		},
+		{
+			featureType: "landscape",
+			stylers: [
+				{
+					color: "#BBBBBB",
+				}
+			]
+		},
+		{
+			featureType: "administrative.province",
+			elementType: "geometry.stroke",
+			stylers: [
+				{
+					color: "#FDFDFD",
+				}
+			]
+		},
+		{
+			featureType: "administrative.locality",
+			stylers: [
+				{
+					visibility: "off"
+				}
+			]
+		}
+
+	]
 	var mapOptions = {
+		panControl: false,
+		streetViewControl: false,
+		mapTypeControl: false,
 	    minZoom: 3,
 	    maxZoom: 6,
-	    zoom: 4,
+	    zoom: 3,
 	    center: new google.maps.LatLng(-25.0000, 135.000),
-	    mapTypeId: google.maps.MapTypeId.ROADMAP
+	    styles : mapStyles
 	};
 
+
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+	blurMap = new google.maps.Map(document.getElementById('blur-map'), mapOptions);
+	blurMap.setOptions({draggable: false, zoomControl: false, scrollwheel: false, disableDoubleClickZoom: true});
+
+	function map_recenter(map,latlng,offsetx,offsety) {
+	    var point1 = map.getProjection().fromLatLngToPoint(
+	        (latlng instanceof google.maps.LatLng) ? latlng : map.getCenter()
+	    );
+	    var point2 = new google.maps.Point(
+	        ( (typeof(offsetx) == 'number' ? offsetx : 0) / Math.pow(2, map.getZoom()) ) || 0,
+	        ( (typeof(offsety) == 'number' ? offsety : 0) / Math.pow(2, map.getZoom()) ) || 0
+	    );  
+	    map.setCenter(map.getProjection().fromPointToLatLng(new google.maps.Point(
+	        point1.x - point2.x,
+	        point1.y + point2.y
+	    )));
+	}
+
+	google.maps.event.addListener(blurMap, 'projection_changed', function(){
+		map_recenter(blurMap, map.getCenter(), 0, -($('#map-canvas').height()/2 + $('#blur-map').height()/2));
+	});
+
+	google.maps.event.addListener(map, 'center_changed', function(){ 
+		map_recenter(blurMap, map.getCenter(), 0, -($('#map-canvas').height()/2 + $('#blur-map').height()/2));
+	});
+
+	google.maps.event.addListener(map, 'zoom_changed', function(e){ 
+		blurMap.setZoom(map.getZoom());
+		map_recenter(blurMap, map.getCenter(), 0, -($('#map-canvas').height()/2 + $('#blur-map').height()/2));
+	});
+
+
 
 	google.maps.event.addListener(map, 'click', function(e) {
 		var geocoderOptions = {
@@ -37,7 +143,11 @@ function MapCtrl(scope, cookies, location, FB) {
 					var adminLevel = results[results.length - 2];
 					var region = adminLevel.address_components[0].short_name;
 					var country = adminLevel.address_components[1].short_name;
-					
+					var lat = adminLevel.geometry.location.lb;
+					var lon = adminLevel.geometry.location.mb;
+					// FB.getPlacesWithExperiencesByCoords(lat, lon, function(response) {
+					// 	console.log(response);
+					// });
 					FB.findPlacesByKeywords([region, country], function(response) {
 						scope.$broadcast('load_experiences', response.data);
 						scope.$apply();
@@ -68,16 +178,6 @@ function ExperienceCtrl(scope, rootScope, FB) {
 		};
 
 		return -1;
-	}
-
-	scope.openExperience = function(experience) { 
-		scope.showcase = experience;
-		scope.closeExperience = closeExperience;
-	}
-
-	function closeExperience() {
-		scope.showcase = null;
-		scope.closeExperience = null;
 	}
 
 	function initStream(event, initPlaces) {

@@ -2,9 +2,9 @@
 	<div class="place-container" ng-repeat="place in places">
 		<div class="place-name header" ng-bind="place.name" ng-click="getExperiencesByPlace(place.id)" stop-event="click"></div>
 
-		<div class="experiences-container" btf-dragon="experience in place.experiences" stop-event="click">
+		<div class="experiences-container" ng-repeat="experience in place.experiences">
 			<div class="experience" ng-switch on="experience.type" ng-show="experience.type == 'photo'">
-				<div class="photo-thumb" ng-switch-when="photo" ng-style="{'background-image': 'url(' + experience.src_big + ')'}">
+				<div class="photo-thumb" ng-switch-when="photo" ng-style="{'background-image': 'url(' + experience.src_big + ')'}" ng-click="openExperience(experience)">
 					<img ng-src="{{experience.src}}">
 				</div>
 			</div>
