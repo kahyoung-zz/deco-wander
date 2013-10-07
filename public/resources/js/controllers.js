@@ -122,14 +122,6 @@ function MapCtrl(scope, cookies, location, FB) {
 		map_recenter(blurMap, map.getCenter(), 0, -($('#map-canvas').height()/2 + $('#blur-map').height()/2));
 	});
 
-	google.maps.event.addListener(map, 'drag', function(){ 
-		map_recenter(blurMap, map.getCenter(), 0, -($('#map-canvas').height()/2 + $('#blur-map').height()/2));
-	});
-
-	google.maps.event.addListener(map, 'dragend', function(){ 
-		map_recenter(blurMap, map.getCenter(), 0, -($('#map-canvas').height()/2 + $('#blur-map').height()/2));
-	});
-
 	google.maps.event.addListener(map, 'center_changed', function(){ 
 		map_recenter(blurMap, map.getCenter(), 0, -($('#map-canvas').height()/2 + $('#blur-map').height()/2));
 	});
