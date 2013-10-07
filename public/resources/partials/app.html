@@ -1,18 +1,21 @@
 <div class="sub-main">
-	<div class="logo">
-		<img src="/resources/images/logo_transparent.png">
-	</div>
 	<div class="top">
-		<div class="drag-me-container">
-			<div class="drag-words">Drag me</div>
-			<div class="drag-man">
-			</div>
-			<div class="drag-words">to a destination</div>
+		<div class="logo">
+			<img src="/resources/images/logo_transparent.png">
 		</div>
+		<div class="drag-me-container">
+			<div class="drag-me-inner">
+				<div class="drag-words">Drag me</div>
+				<div class="drag-man empty">
+				</div>
+				<div class="drag-words">to a destination</div>
+			</div>
+		</div>
+		<div  class="frost overlay" ></div>
 		<div id="blur-map" class="blur" ></div>
 	</div>
 	<experience-stream></experience-stream>
-	<div id="map-canvas"></div>
+	<div id="map-canvas" class="main-content"></div>
 	<div class="bottom">
 		<div class="logout button" ng-click="logout()">
 			<div class="button-part left">

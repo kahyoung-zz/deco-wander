@@ -200,7 +200,6 @@ function ExperienceCtrl(scope, rootScope, FB) {
 				});
 
 				places.indexing.push(initPlaces[i].id);
-				console.log(initPlaces[i].id);
 				getExperiencesByPlace(initPlaces[i].id);
 			}
 		};
