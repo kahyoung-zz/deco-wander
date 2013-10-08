@@ -397,17 +397,17 @@ function ItineraryCtrl(scope, rootScope, Facebook) {
 
 	function addToItinerary(event, item) {
 		var index = scope.places.indexing.indexOf(item.place.id);
-		console.log(index);
+
 		if(index == -1) {
 			scope.places.indexing.push(item.place.id);
 			scope.places.push({
 				'name' : item.place.name,
 				'experiences' : [],
 			});
-			index = scope.places.indexing.indexOf(item.id);
+			index = scope.places.indexing.indexOf(item.place.id);
 		}
+
 		scope.places[index].experiences.push(item.experience);
-		console.log(scope.places);
 	}
 }
 
