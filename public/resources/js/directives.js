@@ -79,29 +79,31 @@ angular.module('WanderApp.directives', ['ngCookies']).
         templateUrl: '/resources/partials/showcase.html',
         controller: ExperienceCtrl,
         link: function(scope, element, attrs){
+          scope.showcase = {};
+          scope.showcase.show = false;
+          
           function closeExperience() {
-            scope.showcase = null;
+            scope.showcase = {};
+            scope.showcase.show = false;
             scope.closeExperience = null;
             element.next().removeClass('blur');
-            scope.$apply();
+            element.next().next().removeClass('blur');
           }
-          scope.openExperience = function(experience) { 
+
+          scope.openExperience = function(place, experience) { 
             element.next().addClass('blur');
+            element.next().next().addClass('blur');
             FB.getUser(experience.owner, function(response) {
-              console.log(response);
-              if(scope.showcase) scope.showcase.user_fullName = response.name;
-              console.log(scope.showcase);
+              if(scope.showcase){
+                scope.showcase.user = {};
+                scope.showcase.user.fullName = response.name;
+              }
               scope.$apply();
             });
 
-            FB.getPlace(experience.place_id, function(response) {
-              console.log(response);
-              if(scope.showcase) scope.showcase.place_name = response.name;
-              console.log(scope.showcase);
-              scope.$apply();
-            });
-            
-            scope.showcase = experience;
+            scope.showcase.show = true;
+            scope.showcase.place = place;
+            scope.showcase.experience = experience;
             scope.closeExperience = closeExperience;
           }
         }

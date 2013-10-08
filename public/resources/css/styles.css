@@ -24,6 +24,20 @@ body {
 	-o-filter     : blur(15px);
 	filter        : blur(15px);
 }
+.blur5 {
+	-webkit-filter: blur(5px);
+	-moz-filter   : blur(5px);
+	-ms-filter    : blur(5px);
+	-o-filter     : blur(5px);
+	filter        : blur(5px);
+}
+.blur10 {
+	-webkit-filter: blur(10px);
+	-moz-filter   : blur(10px);
+	-ms-filter    : blur(10px);
+	-o-filter     : blur(10px);
+	filter        : blur(10px);
+}
 .button {
 	cursor: pointer;
 }
@@ -38,13 +52,18 @@ body {
     -1px 1px 0 #000,
     1px 1px 0 #000;  
 }
-.overlay {
+.overlay, .underlay {
 	position: absolute;
-	z-index: 100;
 	left: 0;
 	top: 0;		
 	height: 100%;
 	width: 100%;
+}
+.overlay {
+	z-index: 100;
+}
+.underlay {
+	z-index: -1;
 }
 	.frost {
 		background-color: rgba(245, 245, 245, 0.7);	
@@ -124,7 +143,7 @@ Main App CSS
 	z-index: 10;
 	height: 15%;
 	width: 100%;
-	padding: 10px 4%;
+	padding: 10px 2%;
 	box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	   -moz-box-sizing: border-box;
@@ -206,7 +225,7 @@ Main App CSS
 	width: 100%;
 	position: absolute;
 	bottom: 0;
-	padding: 0 4% 20px 4%;
+	padding: 0 2% 20px 2%;
 	box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	   -moz-box-sizing: border-box;
@@ -303,6 +322,7 @@ Main App CSS
 	.experience-gallery .experience{
 		float: left;
 		margin: 5px;
+		cursor: pointer;
 	}
 
 .experience-stream {
@@ -317,7 +337,7 @@ Main App CSS
 		padding: 1% 0;
 		height: 65%;
 	}
-	.experience-stream .itinerary {
+	.experience-stream .bottom .itinerary {
 		height: 60%;
 		width: 100%;
 		border: thin dashed #ADADAD;
@@ -384,44 +404,83 @@ Main App CSS
 			}
 .showcase-container{
 	position: absolute;
-	z-index: 1000;
+	z-index: 100;
 	min-width: 100%;
 	min-height: 100%;
 }
-
-.exitbutton{
-	position: absolute;
-	z-index:1000000;
-	right: 0; top: 10%; !important; width:100%; text-align: center;
-}
+	.showcase-container .showcase-inner-container {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		margin: 0 auto;
+	}
 	.showcase-container .showcase-inner {
-  		position: fixed;
-		z-index: 10000;	
-		width: 100%;
-		position: fixed;	left: 0; top:10%; !important; width: 100%; text-align:center;
-		
-	}
-	.showcase-inner img{
-	}
-	.showcase-container .showcase-inner .showcase-information {
   		position: absolute;
-		z-index: 100000;
-		height: 0%;
-		min-height: 65px;
-		max-height: 76px;
-		width: 100%;
-		bottom: 0;
-		background-color: #F8F8F8;
-		opacity: 0.6;
-		font-size: 1.2em;
-		color: #333333;
-		padding: 10px 20px;
-		box-sizing: border-box;
-		-webkit-box-sizing: border-box;
+		margin: 0 auto;
+		width: 38%;
+		left: 0;
+		right: 0;
+		margin-top: 10%;
+		z-index: 20;
 	}
-		.showcase-container .showcase-inner .showcase-information .username {
-			margin-top: 5px;
+
+		.showcase-container .showcase-inner img{
+	  		width: 100%;
+	  		height: auto;
 		}
+		.showcase-container .showcase-inner .itinerary{
+	  		height: 100%;
+	  		padding: 4px 20px;
+	  		box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			   -moz-box-sizing: border-box;
+			    -ms-box-sizing: border-box;
+			     -o-box-sizing: border-box;
+
+		}
+		.showcase-container .showcase-inner .showcase-exit{
+			position: absolute;
+			z-index:10;
+			right: -10px; top: -10px;
+			cursor: pointer;
+		}
+		.showcase-container .showcase-inner .showcase-information {
+	  		position: absolute;
+	  		text-align: right;
+			z-index: 100;
+			height: 15%;
+			min-height: 65px;
+			max-height: 76px;
+			width: 100%;
+			bottom: 0;
+			font-size: 1.2em;
+			color: #222222;
+			font-weight: 400;
+			padding: 10px 20px;
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+		}
+
+		.showcase-container .showcase-inner .showcase-information .username{
+	  		margin-top: 8px;
+		}
+
+		.showcase-container .showcase-inner .underlay {
+	  		background-color: #FCFCFC;
+	  		opacity: 0.9;
+		}
+		.showcase-container .showcase-inner .showcase-crisp {
+	  		background-size: cover;
+			background-position: top;
+			background-repeat: no-repeat;
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 85%;
+			z-index: 1;
+		}
+
 	.showcase-container .showcase-outer{
 		position: absolute;
 		background: black;
