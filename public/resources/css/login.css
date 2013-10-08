@@ -1,81 +1,77 @@
-	@charset "UTF-8";
-	/* CSS Document */
-	html,
-	body {
-		padding:0;
-		height: 100%;
-		width: 100%;
-		font-family:Tahoma, Helvetica, sans-serif;
-		background: #fafafa;
-	
-	}
-	
-	.main{
-		margin: 0 auto;
-		width: 80%;
-		height: 100%;
-	}
-	
-	.logo {
-		position: absolute;
-		height: 48%;
-		width: auto;
-		left:22%;
-		bottom: 43%;
-	}
-	
-	.logo img{
-		bottom:50px;
-		height: 100%;
-		width: auto;
-	}
-	
-	.trail {
-		position: absolute;
-		height: 48%;
-		width: auto;
-		left:6%;
-		bottom: .2%;
-	}
-	
-	.trail img{
-		bottom:50px;
-		height: 100%;
-		width: auto;
-	}
-	
-	.buttonright{
-		padding:5px;
-		width: 180px;
-		background: #4d6fa9;
-		border-left: 2px solid rgba(255,255,255,1);
-		color:rgba(255,255,255,1);
-		font:  1em/35px "Arial";
-		text-align:center;
-		float:left;
-	}
-	
-	a.buttonright{
-		text-decoration:none;
-	}
-	
-	.buttonleft{
-		display:inline-block;
-		padding: 5px;
-		float: left;
-		width: 40px;
-		background: #4d6fa9;
-		color:rgba(255,255,255,1);
-		font:bold 2em/35px "Arial";
-		text-align:center;
-	}
-	a.buttonleft{
-		text-decoration: none;
-	}
-	
-	.button{
-		position: absolute;
-		left: 44%;
-		bottom: 37%;
-	}
-	
+/* CSS Document */
+html,
+body {
+padding:0;
+height: 100%;
+width: 100%;
+font-family:Tahoma, Helvetica, sans-serif;
+background: #fafafa;
+
+}
+
+.main{
+margin: 0 auto;
+width: 80%;
+height: 100%;
+}
+
+.logo {
+padding-top: 5%;
+height: auto;
+width: 50%;
+margin-left: auto;
+margin-right: auto;
+}
+
+.logo img{
+bottom:50px;
+height: auto;
+width: 100%;
+}
+
+.trail {
+text-align: center;
+height: auto;
+width: 100%;
+}
+
+.trail img{
+bottom:50px;
+height: auto;
+width: 100%;
+}
+
+.buttonright{
+padding:5px;
+width: 180px;
+background: #4d6fa9;
+border-left: 2px solid rgba(255,255,255,1);
+color:rgba(255,255,255,1);
+font:  1em/35px "Arial";
+text-align:center;
+float:left;
+}
+
+a.buttonright{
+text-decoration:none;
+}
+
+.buttonleft{
+display:inline-block;
+padding: 5px;
+float: left;
+width: 40px;
+background: #4d6fa9;
+color:rgba(255,255,255,1);
+font:bold 2em/35px "Arial";
+text-align:center;
+}
+a.buttonleft{
+text-decoration: none;
+}
+
+.button{
+position: absolute;
+left: 47%;
+bottom: 50%;
+}
