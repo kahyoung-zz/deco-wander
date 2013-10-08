@@ -1,18 +1,27 @@
 <div class="experience-stream" ng-show="showStream">
 	<div class="top">
-		<div class="logo">
+		<div class="logo" ng-click="closeStream()">
 			<img src="/resources/images/logo_transparent.png">
 		</div>
 	</div>
 	<experience-showcase ng-show="showcase"></experience-showcase>
 	<div class="experience-gallery-container main-content">
 		<experience-gallery></experience-gallery>
-		<div>
-			<span ng-click="backToMap()" style="cursor: pointer">BACK TO MAP |</span>
-			<span ng-click="getMorePlaces(['Sydney', 'NSW'])" style="cursor: pointer"> LOAD MORE PLACES</span>
-		</div>
 	</div>
 	<div class="bottom">
-		<itinerary></itinerary>
+		<div class="bottom-content">
+			<itinerary></itinerary>
+			<div class="button back" ng-click="closeStream()">
+				<img src="/resources/images/back_button.png">
+			</div>
+			<div class="logout button" ng-click="logout()">
+				<div class="button-part left">
+					f
+				</div>
+				<div class="button-part right">
+					Logout of Facebook
+				</div>
+			</div>
+		</div>
 	</div>
 </div>

@@ -1,5 +1,11 @@
 <div class="itinerary">
-	<div class="itinerary experience-container" btf-dragon="iExperience in iExperiences">
+	<div class="itinerary-icon-container">
+		<div class="itinerary-counter stroke" ng-bind="iExperiences.length">
+		</div>
+		<div class="itinerary-icon">
+		</div>
+	</div>
+	<div class="experience-container" ng-repeat="iExperience in iExperiences">
 		<span class="iExperience-container" ng-switch on="iExperience.type">
 			<span class="photo" ng-switch-when="photo">
 				<img ng-src="{{iExperience.src}}" />

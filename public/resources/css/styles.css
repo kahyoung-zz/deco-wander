@@ -30,7 +30,14 @@ body {
 .button-part{
 	float: left;
 }
-
+.stroke {
+	color: white;
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;  
+}
 .overlay {
 	position: absolute;
 	z-index: 100;
@@ -47,7 +54,7 @@ body {
 	z-index: 10;
 	height: 15%;
 	width: 100%;
-	padding: 10px 5%;
+	padding: 10px 2%;
 	box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	   -moz-box-sizing: border-box;
@@ -59,6 +66,7 @@ body {
 		z-index: 100;
 		height: 100%;
 		float: left;
+		cursor: pointer;
 	}
 		.top .logo img {
 			width: auto;
@@ -116,28 +124,66 @@ body {
 	top: 15%;
 	height: 85%;
 	width: 100%;	
-}
-.bottom {
-	height: 10%;
-	width: 100%;
-	position: absolute;
-	bottom: 0;
-	padding: 10px 5%;
+
 	box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	   -moz-box-sizing: border-box;
 	    -ms-box-sizing: border-box;
 	     -o-box-sizing: border-box;
 }
+.bottom {
+	height: 20%;
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	padding: 0 2% 20px 2%;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	    -ms-box-sizing: border-box;
+	     -o-box-sizing: border-box;
+}
+	.bottom-content {
+		position: relative;
+		height: 100%;
+		width: 100%;
+	}
+
+	.bottom .button.back {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		height: 31px;
+		width: auto;
+		box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		   -moz-box-sizing: border-box;
+		    -ms-box-sizing: border-box;
+		     -o-box-sizing: border-box;
+	}
+
+	.bottom .button img {
+		width: auto;
+		height: 100%;
+	}
 .logout.button{
-	float: right;
-	background-color: #3d55b8;	
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	background-color: #4d6fa9;	
 	clear: both;
 	overflow: auto;
 	color: #FDFDFD;
+
+	height: 31px;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	    -ms-box-sizing: border-box;
+	     -o-box-sizing: border-box;
 }
 	.logout.button .button-part {
-		padding: 10px;
+		padding: 5px 10px;
 	}
 		.logout.button .button-part.left {
 			width: 20px;
@@ -147,16 +193,6 @@ body {
 		.logout.button .button-part.right {
 			border-left: 1px solid white;
 		}
-.splash-title {
-	font-size: 72px;
-}
-.experience-stream {
-	position: absolute;
-	z-index: 10000;
-}
-	.experience-stream .top{
-		background-color: #F8F8F8;
-	}
 
 .experience-gallery-container{
 	background-color: #F8F8F8;
@@ -168,50 +204,93 @@ body {
 	overflow-y: hidden;
 	white-space: nowrap;
 }
-.experience-gallery .place-container {
-	width: 660px;
-	height: 1000px;
-	display: inline-block;
-	padding: 5px;
-	margin: 0 5px;
-	overflow-y: scroll;
-	overflow-x: hidden;
-}
-.experience-gallery .place-name.header {
-	margin-bottom: 5px;
-	font-size: 2em;
-	line-height: 1em;
-	color: #444444;
-	cursor: pointer;
+	.experience-gallery .place-container {
+		width: 660px;
+		height: 100%;
+		display: inline-block;
+		padding: 5px;
+		margin: 0 20px;
+		overflow-y: scroll;
+		overflow-x: hidden;
+	}
+	.experience-gallery .place-name.header {
+		margin-bottom: 5px;
+		font-size: 2em;
+		line-height: 1em;
+		color: #444444;
+		cursor: pointer;
+	}
+
+	.experience-gallery .photo-thumb{
+		width: 150px;
+		height: 150px;
+		background-size: cover;
+		background-position: 50% 25%;
+	}
+
+	.experience-gallery .photo-thumb img{
+		display: none;
+	}
+
+	.experience-gallery .experience{
+		float: left;
+		margin: 5px;
+	}
+
+.experience-stream {
+	position: absolute;
+	z-index: 10000;
+	width: 100%;
+	height: 100%;
+	background-color: #F8F8F8;
 }
 
-.experience-gallery .photo-thumb{
-	width: 150px;
-	height: 150px;
-	background-size: cover;
-	background-position: 50% 25%;
-}
-
-.experience-gallery .photo-thumb img{
-	display: none;
-}
-
-.experience-gallery .experience{
-	float: left;
-	margin: 5px;
-}
+	.experience-stream .main-content {
+		padding: 1% 0;
+		height: 65%;
+	}
 .itinerary {
-	height: 100px;
+	height: 60%;
 	width: 100%;
 	border: thin dashed #ADADAD;
 }
-.itinerary .experiences-container{
-	min-width: 200px;
-	min-height: 200px;
-	width: auto;
-	height: auto;
-	border: thin dashed black;
-}
+	.itinerary .itinerary-icon-container {
+		height: 100%;
+		width: 5%;
+		float: left;
+		display: table;
+		padding: 0.1%;
+		cursor: pointer;
+	}
+
+		.itinerary .itinerary-icon-container .itinerary-counter{
+			height: 100%;
+			text-align: center;
+			display: table-cell;
+			padding-top: 10px;
+			vertical-align: middle;
+			font-size: 2em;
+			color: #F8F8F8;
+			min-width: 80px;
+			max-width: 89px;
+			background-image: url('/resources/images/luggage.png');
+			background-position: center;
+			background-repeat: no-repeat;
+
+			background-size: contain;
+			-webkit-background-size: contain;
+			   -moz-background-size: contain;
+			    -ms-background-size: contain;
+			     -o-background-size: contain;
+		}
+
+	.itinerary .experiences-container{
+		min-width: 200px;
+		min-height: 200px;
+		width: auto;
+		height: auto;
+		border: thin dashed black;
+	}
 .showcase-container{
 	position: absolute;
 	z-index: 1000;

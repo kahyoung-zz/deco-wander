@@ -4,7 +4,7 @@
 
 		<div class="experiences-container" ng-repeat="experience in place.experiences">
 			<div class="experience" ng-switch on="experience.type" ng-show="experience.type == 'photo'">
-				<div class="photo-thumb" ng-switch-when="photo" ng-style="{'background-image': 'url(' + experience.src_big + ')'}" ng-click="openExperience(experience)">
+				<div class="photo-thumb" ng-switch-when="photo" ng-style="{'background-image': 'url(' + experience.src_big + ')'}" ng-click="addToItinerary(place, experience)">
 					<img ng-src="{{experience.src}}">
 				</div>
 			</div>

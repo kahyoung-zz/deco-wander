@@ -148,8 +148,8 @@ function MapCtrl(scope, cookies, location, FB) {
 					// FB.getPlacesWithExperiencesByCoords(lat, lon, function(response) {
 					// 	console.log(response);
 					// });
-					FB.findPlacesByKeywords([region, country], function(response) {
-						scope.$broadcast('load_experiences', response.data);
+					FB.searchLocationByCenter('-33.8600', '151.2111', 100000, function(response) {
+						scope.$broadcast('load_experiences', response);
 						scope.$apply();
 					});
 				} else { 
@@ -167,7 +167,7 @@ function ExperienceCtrl(scope, rootScope, FB) {
 	var places = [];
 	scope.iExperiences = [];
 	places.indexing = [];
-	scope.$on('load_experiences', initStream);
+	scope.$on('load_experiences', sortExperiences);
 
 	function indexById(id) {
 
@@ -203,19 +203,28 @@ function ExperienceCtrl(scope, rootScope, FB) {
 				getExperiencesByPlace(initPlaces[i].id);
 			}
 		};
-		scope.showStream = true;
-		scope.backToMap = backToMap;
-		scope.loadExperience = loadExperience;
-		scope.getExperiencesByPlace = getExperiencesByPlace;
-		scope.getMorePlaces = getMorePlaces;
-		scope.places = places;
-		scope.$apply();
+		// scope.showStream = true;
+		// scope.closeStream = closeStream;
+		// scope.loadExperience = loadExperience;
+		// scope.getExperiencesByPlace = getExperiencesByPlace;
+		// scope.getMorePlaces = getMorePlaces;
+		// scope.places = places;
+		// scope.$apply();
 	}
-	function backToMap() {
+	function closeStream() {
 		places = [];
 		places.indexing = [];
 		scope.showStream = false;
 		scope.$apply;
+	}
+
+	function addToItinerary(place, experience) {
+		var experienceWithPlace = {};
+		experienceWithPlace['experience'] = experience;
+		experienceWithPlace['place'] = {};
+		experienceWithPlace['place'].id = place.id;
+		experienceWithPlace['place'].name = place.name;
+		scope.$broadcast('addToItinerary', experienceWithPlace);
 	}
 
 	function sortExperiences(event, experiences) {
@@ -262,11 +271,20 @@ function ExperienceCtrl(scope, rootScope, FB) {
 				break;
 			}
 		};
+
+		scope.showStream = true;
+		scope.closeStream = closeStream;
 		scope.loadExperience = loadExperience;
 		scope.getExperiencesByPlace = getExperiencesByPlace;
 		scope.getMorePlaces = getMorePlaces;
 		scope.places = places;
+		scope.addToItinerary = addToItinerary;
 		scope.$apply();
+		// scope.loadExperience = loadExperience;
+		// scope.getExperiencesByPlace = getExperiencesByPlace;
+		// scope.getMorePlaces = getMorePlaces;
+		// scope.places = places;
+		// scope.$apply();
 	}
 
 	function addNewPlaces(placeArray) {
@@ -372,6 +390,28 @@ function ExperienceCtrl(scope, rootScope, FB) {
 	}
 }
 
+function ItineraryCtrl(scope, rootScope, Facebook) {
+	scope.$on('addToItinerary', addToItinerary);
+	scope.places = [];
+	scope.places.indexing = [];
+
+	function addToItinerary(event, item) {
+		var index = scope.places.indexing.indexOf(item.place.id);
+		console.log(index);
+		if(index == -1) {
+			scope.places.indexing.push(item.place.id);
+			scope.places.push({
+				'name' : item.place.name,
+				'experiences' : [],
+			});
+			index = scope.places.indexing.indexOf(item.id);
+		}
+		scope.places[index].experiences.push(item.experience);
+		console.log(scope.places);
+	}
+}
+
+ItineraryCtrl.$inject = ['$scope', '$rootScope', 'Facebook'];
 WanderCtrl.$inject = ['$scope', '$rootScope', '$cookies', 'Facebook'];
 LoginCtrl.$inject = ['$scope'];
 MapCtrl.$inject = ['$scope', '$cookies', '$location', 'Facebook'];

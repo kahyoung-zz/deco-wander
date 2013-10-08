@@ -55,7 +55,9 @@ angular.module('WanderApp.directives', ['ngCookies']).
   .directive('itinerary', ['$timeout','$compile', function($timeout, $compile) {
    return {
         restrict: 'E', 
+        scope: true,
         templateUrl: '/resources/partials/itinerary.html',
+        controller: ItineraryCtrl,
         link: function(scope, element, attrs){
           //   
         }

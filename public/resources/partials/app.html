@@ -1,6 +1,6 @@
 <div class="sub-main">
 	<div class="top">
-		<div class="logo">
+		<div class="logo"  ng-click="closeStream()">
 			<img src="/resources/images/logo_transparent.png">
 		</div>
 		<div class="drag-me-container">
@@ -17,12 +17,14 @@
 	<experience-stream></experience-stream>
 	<div id="map-canvas" class="main-content"></div>
 	<div class="bottom">
-		<div class="logout button" ng-click="logout()">
-			<div class="button-part left">
-				f
-			</div>
-			<div class="button-part right">
-				Logout of Facebook
+		<div class="bottom-content">
+			<div class="logout button" ng-click="logout()">
+				<div class="button-part left">
+					f
+				</div>
+				<div class="button-part right">
+					Logout of Facebook
+				</div>
 			</div>
 		</div>
 	</div>
