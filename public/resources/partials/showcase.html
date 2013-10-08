@@ -1,6 +1,23 @@
+<!doctype html>
+<html lang="en" xmls:ng="WanderApp">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0" />
+ 
+   <title>Wander</title>
+  <link rel="stylesheet" href="css/normalize.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  
+</head>
+  
+<body>
+
 <div class="showcase-container">
+   	<div class="exitbutton">
+    <img src="images/cross.png">
+    </div>
 	<div class="showcase-inner">
-		<img ng-src="{{showcase.src_big}}">
+		<img src="images/thanh.jpg">
 		<div class="showcase-information">
 			<div class="place">{{showcase.place_name}}, NSW, Australia</div>
 			<div class="username">Photo by {{showcase.user_fullName}}</div>
@@ -9,3 +26,6 @@
 	<div class="showcase-outer" ng-click="closeExperience()">
 	</div>
 </div>
+
+</body>
+</html>
