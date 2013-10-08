@@ -8,6 +8,7 @@ function WanderCtrl(scope, rootScope, cookies, FB) {
 	// 		xfbml      : true                                  // Look for social plugins on the page
 	// 	});
 	scope.logout = FB.logout;
+	scope.login = FB.login;
 }
 
 function LoginCtrl(scope) {
@@ -392,22 +393,22 @@ function ExperienceCtrl(scope, rootScope, FB) {
 
 function ItineraryCtrl(scope, rootScope, Facebook) {
 	scope.$on('addToItinerary', addToItinerary);
-	scope.places = [];
-	scope.places.indexing = [];
+	scope.iplaces = [];
+	scope.iplaces.indexing = [];
 
 	function addToItinerary(event, item) {
-		var index = scope.places.indexing.indexOf(item.place.id);
+		var index = scope.iplaces.indexing.indexOf(item.place.id);
 
 		if(index == -1) {
-			scope.places.indexing.push(item.place.id);
-			scope.places.push({
+			scope.iplaces.indexing.push(item.place.id);
+			scope.iplaces.push({
 				'name' : item.place.name,
 				'experiences' : [],
 			});
-			index = scope.places.indexing.indexOf(item.place.id);
+			index = scope.iplaces.indexing.indexOf(item.place.id);
 		}
 
-		scope.places[index].experiences.push(item.experience);
+		scope.iplaces[index].experiences.push(item.experience);
 	}
 }
 

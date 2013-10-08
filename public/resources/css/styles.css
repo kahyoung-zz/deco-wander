@@ -49,6 +49,10 @@ body {
 	.frost {
 		background-color: rgba(245, 245, 245, 0.7);	
 	}
+.photo-thumb {
+	background-size: cover;
+	background-position: 50% 25%;
+}
 .top {
 	position: absolute;
 	z-index: 10;
@@ -224,8 +228,6 @@ body {
 	.experience-gallery .photo-thumb{
 		width: 150px;
 		height: 150px;
-		background-size: cover;
-		background-position: 50% 25%;
 	}
 
 	.experience-gallery .photo-thumb img{
@@ -249,10 +251,17 @@ body {
 		padding: 1% 0;
 		height: 65%;
 	}
+	.experience-stream .itinerary {
+		height: 60%;
+		width: 100%;
+		border: thin dashed #ADADAD;
+		position: static;
+	}
 .itinerary {
-	height: 60%;
-	width: 100%;
-	border: thin dashed #ADADAD;
+	height: 76px;
+	position: absolute;
+	left: 0;
+	bottom: 0;
 }
 	.itinerary .itinerary-icon-container {
 		height: 100%;
@@ -284,13 +293,29 @@ body {
 			     -o-background-size: contain;
 		}
 
-	.itinerary .experiences-container{
-		min-width: 200px;
-		min-height: 200px;
-		width: auto;
-		height: auto;
-		border: thin dashed black;
+	.itinerary .itinerary-places{
+		float: right;
+		height: 100%;
+		width: 85%;
+		padding: 5px;
+
+		box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		   -moz-box-sizing: border-box;
+		    -ms-box-sizing: border-box;
+		     -o-box-sizing: border-box;
 	}
+		.itinerary .itinerary-places .place-container{
+			float: left;
+			margin: 0 5px;
+		}
+
+			.itinerary .itinerary-places .photo-thumb{
+				float: left;
+				width: 20px;
+				height: 20px;
+				margin: 2px;
+			}
 .showcase-container{
 	position: absolute;
 	z-index: 1000;
