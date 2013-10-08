@@ -218,14 +218,25 @@ body {
 	min-width: 100%;
 	min-height: 100%;
 }
+
+.exitbutton{
+	position: absolute;
+	z-index:1000000;
+	right: 0; top: 10%; !important; width:100%; text-align: center;
+}
 	.showcase-container .showcase-inner {
-  		position: absolute;
-		z-index: 10000;
+  		position: fixed;
+		z-index: 10000;	
+		width: 100%;
+		position: fixed;	left: 0; top:10%; !important; width: 100%; text-align:center;
+		
+	}
+	.showcase-inner img{
 	}
 	.showcase-container .showcase-inner .showcase-information {
   		position: absolute;
 		z-index: 100000;
-		height: 15%;
+		height: 0%;
 		min-height: 65px;
 		max-height: 76px;
 		width: 100%;
