@@ -242,7 +242,7 @@ Main App CSS
 		position: absolute;
 		bottom: 0;
 		left: 0;
-		height: 31px;
+		height: 32px;
 		width: auto;
 		box-sizing: border-box;
 		-webkit-box-sizing: border-box;
@@ -459,6 +459,10 @@ Main App CSS
 			padding: 10px 20px;
 			box-sizing: border-box;
 			-webkit-box-sizing: border-box;
+		}
+
+		.showcase-container .showcase-inner .itinerary-counter {
+			background-image: url('/resources/images/luggage_plus.png');
 		}
 
 		.showcase-container .showcase-inner .showcase-information .username{
