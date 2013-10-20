@@ -8,14 +8,21 @@ html,body, .main, .view, .sub-main{
 }
 body {
 	font: 14px/1.5em "Lucida Grande", Arial, sans-serif;
-	background: #F8F8F8;
 	overflow: hidden;
-	background-image: none;
 }
 .ng-cloak { display: none;}
 .main {
 	min-width: 100%;
 	overflow: hidden;
+}
+.sub-main{
+	background:url('/resources/images/city%20silhouette.png');
+	background-repeat:no-repeat;
+	background-position:bottom;
+	-webkit-background-size: contain;
+	-moz-background-size:contain;
+	-o-background-size:contain;
+	background-size: contain;
 }
 .blur {
 	-webkit-filter: blur(15px);
@@ -46,11 +53,6 @@ body {
 }
 .stroke {
 	color: white;
-    text-shadow:
-    -1px -1px 0 #000,
-    1px -1px 0 #000,
-    -1px 1px 0 #000,
-    1px 1px 0 #000;  
 }
 .overlay, .underlay {
 	position: absolute;
@@ -163,6 +165,10 @@ Main App CSS
 		}
 	.top .overlay {
 		z-index: 10;
+		background:url('/resources/images/Clouds.png');
+		background-position:top;
+		background-repeat:no-repeat;
+		
 	}
 	.top .drag-me-container{
 		position: relative;
