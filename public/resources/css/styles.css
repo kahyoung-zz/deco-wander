@@ -499,7 +499,23 @@ Main App CSS
 		min-height: 100%;
 	}
 	
+.itinerary-outer{
+		position: absolute;
+		background: black;
+		opacity: 0.8;
+		width: 100%;
+		height: 100%;
+	}
+	
+.itinerarylightbox-container {
+	position: absolute;
+	z-index: 100;
+	min-width: 100%;
+	min-height: 100%;
+}
+	
 .itinerarylightbox-inner{
+	background:#FFF;
 	position: absolute;
 	margin: 0 auto;
 	width: 20%;
@@ -567,7 +583,23 @@ Main App CSS
 	cursor:pointer;
 }
 
+ .friends-outer{
+		position: absolute;
+		background: black;
+		opacity: 0.8;
+		width: 100%;
+		height: 100%;
+	}
+	
+.friendslightbox-container {
+	position: absolute;
+	z-index: 100;
+	min-width: 100%;
+	min-height: 100%;
+}
+
 .friendslightbox-inner{
+	background:#FFF;
 	position: absolute;
 	margin: 0 auto;
 	width: 20%;
