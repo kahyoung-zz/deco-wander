@@ -119,8 +119,9 @@ Main App CSS
 			height: 100%;
 		}
 	.top .overlay {
-		z-index: 1;	
+		z-index: -10;	
 		
+
 	}
 	
 	.top .drag-me-container{
@@ -299,6 +300,16 @@ Main App CSS
 	width: 100%;
 	height: 100%;
 	background-color: #F8F8F8;
+}
+
+.experience-stream .top {
+background: url('/resources/images/clouds.png');
+	background-position:top;
+	background-repeat:repeat-x;
+	-webkit-background-size: contain;
+	-moz-background-size:contain;
+	-o-background-size:contain;
+	background-size: contain;
 }
 
 	.experience-stream .main-content {
