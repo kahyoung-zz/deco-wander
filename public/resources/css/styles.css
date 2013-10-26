@@ -5,6 +5,17 @@ html,body, .main, .view, .sub-main{
 	max-width: 100%;
 	min-height: 100%;
 	max-height: 100%;
+<<<<<<< HEAD
+=======
+	background: url('/resources/images/Clouds.png');
+	background-position:top;
+	background-repeat:repeat-x;
+	-webkit-background-size: contain;
+	-moz-background-size:contain;
+	-o-background-size:contain;
+	background-size: contain;
+	
+>>>>>>> f0582881989c49aad23dff97be0e22c743866e62
 	
 }
 body {
@@ -150,16 +161,27 @@ Main App CSS
 			.top .drag-me-container .drag-me-inner .drag-words{
 				display: inline-block;
 			}
-			.top .drag-me-container .drag-me-inner .drag-man{
+			.top .drag-me-container .drag-me-inner .drag-man-container{
 				display: inline-block;
 				height: 2em;
 				width: 2em;
 				border: thin dashed black;
-				cursor: pointer;
 			}
-			.top .drag-me-container .drag-me-inner .drag-man.empty{
+				.top .drag-me-container .drag-me-inner .drag-man {
+					height: 100%;
+					width: 100%;
+					background-image: url('/resources/images/drag-man.png');
+					background-repeat: no-repeat;
+					background-size: 50% 100%;
+					background-position: center;
+					cursor: pointer;
+				}
+			.top .drag-me-container .drag-me-inner .drag-man-container.empty{
 				cursor: default;
 			}
+		#map-canvas {
+			position: relative;
+		}
 		.top #blur-map{
 			position: absolute;
 			left: 0;
@@ -264,13 +286,11 @@ Main App CSS
 	white-space: nowrap;
 }
 	.experience-gallery .place-container {
-		width: 660px;
+		width: 670px;
 		height: 100%;
 		display: inline-block;
 		padding: 5px;
 		margin: 0 20px;
-		overflow-y: scroll;
-		overflow-x: hidden;
 	}
 	.experience-gallery .place-name.header {
 		margin-bottom: 5px;
@@ -279,6 +299,11 @@ Main App CSS
 		color: #444444;
 		cursor: pointer;
 	}
+		.experience-gallery .place-container .content-container {
+			height: 100%;
+			overflow-y: scroll;
+			overflow-x: hidden;
+		}
 
 	.experience-gallery .photo-thumb{
 		width: 150px;
@@ -289,10 +314,11 @@ Main App CSS
 		display: none;
 	}
 
-	.experience-gallery .experience{
+	.experience-gallery .photo{
 		float: left;
 		margin: 5px;
 		cursor: pointer;
+		border: 1px dashed #777777;
 	}
 
 .experience-stream {
@@ -304,7 +330,7 @@ Main App CSS
 }
 
 .experience-stream .top {
-background: url('/resources/images/clouds.png');
+background: url('/resources/images/Clouds.png');
 	background-position:top;
 	background-repeat:repeat-x;
 	-webkit-background-size: contain;

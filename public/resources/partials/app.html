@@ -1,12 +1,14 @@
 <div class="sub-main">
-	<div class="top">
+	<div class="top"  unselectable="on">
 		<div class="logo"  ng-click="closeStream()">
 			<img src="/resources/images/logo_transparent.png">
 		</div>
 		<div class="drag-me-container">
 			<div class="drag-me-inner">
 				<div class="drag-words">Drag me</div>
-				<div class="drag-man empty">
+				<div class="drag-man-container empty">
+					<div class="drag-man" drag-man>
+					</div>
 				</div>
 				<div class="drag-words">to a destination</div>
 			</div>
@@ -16,7 +18,7 @@
 		<div id="blur-map" class="blur" ></div>
 	</div>
 	<experience-stream></experience-stream>
-	<div id="map-canvas" class="main-content"></div>
+	<div id="map-canvas" class="main-content" map-droppable="{accept : '.drag-man'}"></div>
 	<div class="bottom">
 		<div class="bottom-content">
 			<div class="itinerary">

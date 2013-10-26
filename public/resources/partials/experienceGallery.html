@@ -1,14 +1,19 @@
 <div class="experience-gallery">
-	<div class="place-container" ng-repeat="place in places">
+	<div class="place-container" fb-place="place" ng-repeat="place in places">
 		<div class="place-name header" ng-bind="place.name" ng-click="getExperiencesByPlace(place.id)" stop-event="click"></div>
 
-		<div class="experiences-container" ng-repeat="experience in place.experiences">
-			<div class="experience" ng-switch on="experience.type" ng-show="experience.type == 'photo'">
-				<div class="photo-thumb" ng-switch-when="photo" ng-style="{'background-image': 'url(' + experience.src_big + ')'}" ng-click="openExperience(place, experience)">
-					<img ng-src="{{experience.src}}">
+		<div class="content-container">
+			<div class="photo" ng-repeat="photo in photos">
+				<div class="photo-thumb" ng-style="{'background-image': 'url(' + photo.src_big + ')'}"  draggable-photo>
+					<img ng-src="{{photo.src}}">
 				</div>
 			</div>
+			<div class="no-photos-container" ng-hide="!place.loaded || photos.length > 0">
+				This place has no photos!!
+			</div>
+			<div class="no-photos-container" ng-hide="place.loaded">
+				Loading Photos...
+			</div>
 		</div>
-
 	</div>	
 </div> 

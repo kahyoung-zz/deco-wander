@@ -7,15 +7,30 @@ function WanderCtrl(scope, rootScope, cookies, FB) {
 	// 		status     : true,                                 // Check Facebook Login status
 	// 		xfbml      : true                                  // Look for social plugins on the page
 	// 	});
+	function closeStream() {
+		scope.$broadcast('close_stream', true);
+	}
+
 	scope.logout = FB.logout;
-	scope.login = FB.login;
+	scope.login = FB.loginNoPopup;
+	scope.closeStream = closeStream;
 }
 
 function LoginCtrl(scope) {
+	FB.getLoginStatus(function(response) {
+		if (response.status === 'connected') {
+			window.location = FB.getRedirectURL() + '/#/app';	
+		}
+	});
 }
 
 
 function MapCtrl(scope, cookies, location, FB) {
+	FB.getLoginStatus(function(response) {
+		if (response.status != 'connected') {
+			window.location = FB.getRedirectURL();
+		}
+	});
 	var map;
 	var blurMap;
 	var geocoder = new google.maps.Geocoder();
@@ -34,7 +49,7 @@ function MapCtrl(scope, cookies, location, FB) {
 			featureType: "water",
 			stylers: [
 				{
-					color: "#F8F8F8",
+					color: "#FFFFFF",
 				}
 			]
 		},
@@ -93,15 +108,20 @@ function MapCtrl(scope, cookies, location, FB) {
 		panControl: false,
 		streetViewControl: false,
 		mapTypeControl: false,
-	    minZoom: 3,
+	    minZoom: 2,
 	    maxZoom: 6,
-	    zoom: 3,
+	    zoom: 2,
+	    backgroundColor: '#FFFFFF',
 	    center: new google.maps.LatLng(-25.0000, 135.000),
 	    styles : mapStyles
 	};
 
 
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+	var overlay = new google.maps.OverlayView();
+	overlay.draw = function() {};
+	overlay.setMap(map);
+
 	blurMap = new google.maps.Map(document.getElementById('blur-map'), mapOptions);
 	blurMap.setOptions({draggable: false, zoomControl: false, scrollwheel: false, disableDoubleClickZoom: true});
 
@@ -119,25 +139,46 @@ function MapCtrl(scope, cookies, location, FB) {
 	    )));
 	}
 
+	// Set min and max latitudes for the main map
+	var minLat = new google.maps.LatLng(-43, -180).lat();
+    var maxLat = new google.maps.LatLng(80, 180).lat();
+
+    // Store the last valid center
+	var lastValidCenter = map.getCenter();
+
 	google.maps.event.addListener(blurMap, 'projection_changed', function(){
 		map_recenter(blurMap, map.getCenter(), 0, -($('#map-canvas').height()/2 + $('#blur-map').height()/2));
 	});
 
 	google.maps.event.addListener(map, 'center_changed', function(){ 
-		map_recenter(blurMap, map.getCenter(), 0, -($('#map-canvas').height()/2 + $('#blur-map').height()/2));
+		var currentLat = map.getCenter().lat();
+		if (currentLat > minLat && currentLat < maxLat) {
+	        // still within valid bounds, so save the last valid position
+	        lastValidCenter = map.getCenter();
+	        map_recenter(blurMap, map.getCenter(), 0, -($('#map-canvas').height()/2 + $('#blur-map').height()/2));
+	    } else {
+	    // not valid anymore => return to last valid position
+		    var newCenter = new google.maps.LatLng(lastValidCenter.lat(), map.getCenter().lng());
+	    	
+	    	map.panTo(newCenter);
+    	}
 	});
 
-	google.maps.event.addListener(map, 'zoom_changed', function(e){ 
+	google.maps.event.addListener(map, 'zoom_changed', function(e){
 		blurMap.setZoom(map.getZoom());
 		map_recenter(blurMap, map.getCenter(), 0, -($('#map-canvas').height()/2 + $('#blur-map').height()/2));
 	});
 
 
+	scope.loadPlacesByPosition = function(x, y) {
+		var latLng = overlay.getProjection().fromContainerPixelToLatLng(
+		    new google.maps.Point(x, y)
+		);
 
-	google.maps.event.addListener(map, 'click', function(e) {
-		var geocoderOptions = {
-			'latLng' : e.latLng
+    	var geocoderOptions = {
+			'latLng' : latLng
 		}
+
 		geocoder.geocode(geocoderOptions, function(results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
 				if(results[1]) {
@@ -146,12 +187,8 @@ function MapCtrl(scope, cookies, location, FB) {
 					var country = adminLevel.address_components[1].short_name;
 					var lat = adminLevel.geometry.location.lb;
 					var lon = adminLevel.geometry.location.mb;
-					// FB.getPlacesWithExperiencesByCoords(lat, lon, function(response) {
-					// 	console.log(response);
-					// });
-					FB.searchLocationByCenter('-33.8600', '151.2111', 100000, function(response) {
-						scope.$broadcast('load_experiences', response);
-						scope.$apply();
+					FB.getPlacesByLatLngAndKeywords(lat, lon, 'club', function(response) {
+						scope.$broadcast('init_region', response);
 					});
 				} else { 
 					console.log('Geocoder: No results found');
@@ -160,236 +197,240 @@ function MapCtrl(scope, cookies, location, FB) {
 				console.log('Geocoder has failed because: ' + status);
 			}
 		});
-	});
+	};
 }
 
-function ExperienceCtrl(scope, rootScope, FB) {
-	var regionPaging;
-	var places = [];
-	scope.iExperiences = [];
-	places.indexing = [];
-	scope.$on('load_experiences', sortExperiences);
+// function ExperienceCtrl(scope, rootScope, FB) {
+// 	var regionPaging;
+// 	var places = [];
+// 	scope.iExperiences = [];
+// 	places.indexing = [];
+// 	scope.$on('init_region', initRegion);
 
-	function indexById(id) {
+// 	function indexById(id) {
 
-		for (var i = places.indexing.length - 1; i >= 0; i--) {
-			if(places.indexing[i] === id) {
-				return i;
-			}
-		};
+// 		for (var i = places.indexing.length - 1; i >= 0; i--) {
+// 			if(places.indexing[i] === id) {
+// 				return i;
+// 			}
+// 		};
 
-		return -1;
-	}
+// 		return -1;
+// 	}
 
-	function initStream(event, initPlaces) {
-		places = [];
-		places.indexing = [];
-		scope.showStream = false;
-		scope.$apply();
-		var callback = null;
-		for (var i = initPlaces.length - 1; i >= 0; i--) {
-			var index = indexById(initPlaces[i].id);
-			if(index != -1) {
-				if(!places[index].name) {
-					places[index].name = initPlaces[i].name;
-				} 
-			} else {
-				places.push({
-					'id' : initPlaces[i].id,
-					'name' : initPlaces[i].name,
-					'experiences' : []
-				});
+// 	function initRegion(event, region) {
+// 		console.log(region);
+// 	}
 
-				places.indexing.push(initPlaces[i].id);
-				getExperiencesByPlace(initPlaces[i].id);
-			}
-		};
-		// scope.showStream = true;
-		// scope.closeStream = closeStream;
-		// scope.loadExperience = loadExperience;
-		// scope.getExperiencesByPlace = getExperiencesByPlace;
-		// scope.getMorePlaces = getMorePlaces;
-		// scope.places = places;
-		// scope.$apply();
-	}
-	function closeStream() {
-		places = [];
-		places.indexing = [];
-		scope.showStream = false;
-		scope.$apply;
-	}
+// 	function initStream(event, initPlaces) {
+// 		places = [];
+// 		places.indexing = [];
+// 		scope.showStream = false;
+// 		scope.$apply();
+// 		var callback = null;
+// 		for (var i = initPlaces.length - 1; i >= 0; i--) {
+// 			var index = indexById(initPlaces[i].id);
+// 			if(index != -1) {
+// 				if(!places[index].name) {
+// 					places[index].name = initPlaces[i].name;
+// 				} 
+// 			} else {
+// 				places.push({
+// 					'id' : initPlaces[i].id,
+// 					'name' : initPlaces[i].name,
+// 					'experiences' : []
+// 				});
 
-	function addToItinerary(place, experience) {
-		var experienceWithPlace = {};
-		experienceWithPlace['experience'] = experience;
-		experienceWithPlace['place'] = {};
-		experienceWithPlace['place'].id = place.id;
-		experienceWithPlace['place'].name = place.name;
-		scope.$broadcast('addToItinerary', experienceWithPlace);
-	}
+// 				places.indexing.push(initPlaces[i].id);
+// 				getExperiencesByPlace(initPlaces[i].id);
+// 			}
+// 		};
+// 		// scope.showStream = true;
+// 		// scope.closeStream = closeStream;
+// 		// scope.loadExperience = loadExperience;
+// 		// scope.getExperiencesByPlace = getExperiencesByPlace;
+// 		// scope.getMorePlaces = getMorePlaces;
+// 		// scope.places = places;
+// 		// scope.$apply();
+// 	}
+// 	function closeStream() {
+// 		places = [];
+// 		places.indexing = [];
+// 		scope.showStream = false;
+// 		scope.$apply;
+// 	}
 
-	function sortExperiences(event, experiences) {
-		// Sorts given experiences into categories
-		for (var i = experiences.length - 1; i >= 0; i--) {
-			var type = undefined;
-			switch (experiences[i].name) {
-				case 'checkins' :
-				break;
-				case 'photos' :
-					if(!type) type = "photo";
-				case 'statuses' :
-					if(!type) type = "status";
-					for (var j = experiences[i].fql_result_set.length - 1; j >= 0; j--) {
-						var experience = experiences[i].fql_result_set[j];
-						var index = indexById(experience.place_id);
-						experience.type = type;
-						if(index != -1) {
-							places[index].experiences = places[index].experiences.concat(experience);
-						} else {
-							places.push({
-								'id' : experience.place_id,
-								'experiences' : experience
-							});
-							places.indexing.push(experience.place_id);
-						}
-					};
-					break;
-				case 'places' :
-					for (var j = experiences[i].fql_result_set.length - 1; j >= 0; j--) {
-						var place = experiences[i].fql_result_set[j];
-						var index = indexById(place.page_id);
-						if(index != -1) {
-							if(!places[index].name) places[index].name = place.name;
-						} else {
-							places.push({
-								'id' : place.page_id,
-								'name' : place.name,
-								'experiences' : []
-							});
-							places.indexing.push(place.page_id);
-						}
-					};
-				break;
-			}
-		};
+// 	function addToItinerary(place, experience) {
+// 		var experienceWithPlace = {};
+// 		experienceWithPlace['experience'] = experience;
+// 		experienceWithPlace['place'] = {};
+// 		experienceWithPlace['place'].id = place.id;
+// 		experienceWithPlace['place'].name = place.name;
+// 		scope.$broadcast('addToItinerary', experienceWithPlace);
+// 	}
 
-		scope.showStream = true;
-		scope.closeStream = closeStream;
-		scope.loadExperience = loadExperience;
-		scope.getExperiencesByPlace = getExperiencesByPlace;
-		scope.getMorePlaces = getMorePlaces;
-		scope.places = places;
-		scope.addToItinerary = addToItinerary;
-		scope.$apply();
-		// scope.loadExperience = loadExperience;
-		// scope.getExperiencesByPlace = getExperiencesByPlace;
-		// scope.getMorePlaces = getMorePlaces;
-		// scope.places = places;
-		// scope.$apply();
-	}
+// 	function sortExperiences(event, experiences) {
+// 		// Sorts given experiences into categories
+// 		for (var i = experiences.length - 1; i >= 0; i--) {
+// 			var type = undefined;
+// 			switch (experiences[i].name) {
+// 				case 'checkins' :
+// 				break;
+// 				case 'photos' :
+// 					if(!type) type = "photo";
+// 				case 'statuses' :
+// 					if(!type) type = "status";
+// 					for (var j = experiences[i].fql_result_set.length - 1; j >= 0; j--) {
+// 						var experience = experiences[i].fql_result_set[j];
+// 						var index = indexById(experience.place_id);
+// 						experience.type = type;
+// 						if(index != -1) {
+// 							places[index].experiences = places[index].experiences.concat(experience);
+// 						} else {
+// 							places.push({
+// 								'id' : experience.place_id,
+// 								'experiences' : experience
+// 							});
+// 							places.indexing.push(experience.place_id);
+// 						}
+// 					};
+// 					break;
+// 				case 'places' :
+// 					for (var j = experiences[i].fql_result_set.length - 1; j >= 0; j--) {
+// 						var place = experiences[i].fql_result_set[j];
+// 						var index = indexById(place.page_id);
+// 						if(index != -1) {
+// 							if(!places[index].name) places[index].name = place.name;
+// 						} else {
+// 							places.push({
+// 								'id' : place.page_id,
+// 								'name' : place.name,
+// 								'experiences' : []
+// 							});
+// 							places.indexing.push(place.page_id);
+// 						}
+// 					};
+// 				break;
+// 			}
+// 		};
 
-	function addNewPlaces(placeArray) {
-		var addedPlaces = [];
-		for (var i = placeArray.length - 1; i >= 0; i--) {
-			if(indexById(placeArray[i].id) == -1) {
-				places.indexing.push(placeArray[i].id);
-				places.push({
-					'id' : placeArray[i].id,
-					'name' : placeArray[i].name,
-					'experiences' : []
-				});
-				addedPlaces.push(placeArray[i]);
-			}
-		};
+// 		scope.showStream = true;
+// 		scope.closeStream = closeStream;
+// 		scope.loadExperience = loadExperience;
+// 		scope.getExperiencesByPlace = getExperiencesByPlace;
+// 		scope.getMorePlaces = getMorePlaces;
+// 		scope.places = places;
+// 		scope.addToItinerary = addToItinerary;
+// 		scope.$apply();
+// 		// scope.loadExperience = loadExperience;
+// 		// scope.getExperiencesByPlace = getExperiencesByPlace;
+// 		// scope.getMorePlaces = getMorePlaces;
+// 		// scope.places = places;
+// 		// scope.$apply();
+// 	}
 
-		return addedPlaces;
-	}
+// 	function addNewPlaces(placeArray) {
+// 		var addedPlaces = [];
+// 		for (var i = placeArray.length - 1; i >= 0; i--) {
+// 			if(indexById(placeArray[i].id) == -1) {
+// 				places.indexing.push(placeArray[i].id);
+// 				places.push({
+// 					'id' : placeArray[i].id,
+// 					'name' : placeArray[i].name,
+// 					'experiences' : []
+// 				});
+// 				addedPlaces.push(placeArray[i]);
+// 			}
+// 		};
 
-	function loadExperience(experience, type) {
-		// Loads a given experience when shown
-		scope.showcase = experience;
-		scope.showcase.type = type;
-		switch(type) {
-			case 'checkin' :
-				loadCheckin(experience);
-				break;
-			case 'photo' :
-				loadPhoto(experience);
-				break;
-			case 'status' :
-				loadStatus(experience);
-				break;
-		}
-	}
+// 		return addedPlaces;
+// 	}
 
-	function getExperiencesByPlace(id) {
-		var index = indexById(id);
-		console.log(id);
-		if(!places[index].paging) {
-			FB.getExperiencesByPlace(id, function(response) {
-				places[index].paging = response.paging;
-				var sorted = FB.sortExperiencesByType(response.data);
+// 	function loadExperience(experience, type) {
+// 		// Loads a given experience when shown
+// 		scope.showcase = experience;
+// 		scope.showcase.type = type;
+// 		switch(type) {
+// 			case 'checkin' :
+// 				loadCheckin(experience);
+// 				break;
+// 			case 'photo' :
+// 				loadPhoto(experience);
+// 				break;
+// 			case 'status' :
+// 				loadStatus(experience);
+// 				break;
+// 		}
+// 	}
 
-				FB.getExtendedInformation(sorted, function(response){ 
-					sortExperiences(null, response);
-				});
-			});
-		} else {
-			FB.getNewPage(places[index].paging.next, function(response) {
-				places[index].paging = response.paging;
-				var sorted = FB.sortExperiencesByType(response.data);
+// 	function getExperiencesByPlace(id) {
+// 		var index = indexById(id);
+// 		console.log(id);
+// 		if(!places[index].paging) {
+// 			FB.getExperiencesByPlace(id, function(response) {
+// 				places[index].paging = response.paging;
+// 				var sorted = FB.sortExperiencesByType(response.data);
 
-				FB.getExtendedInformation(sorted, function(response) {
-					sortExperiences(null, response);
-				});
-			});
-		}
-	}
+// 				FB.getExtendedInformation(sorted, function(response){ 
+// 					sortExperiences(null, response);
+// 				});
+// 			});
+// 		} else {
+// 			FB.getNewPage(places[index].paging.next, function(response) {
+// 				places[index].paging = response.paging;
+// 				var sorted = FB.sortExperiencesByType(response.data);
 
-	function getMorePlaces(keywords) {
-		if(regionPaging) {
-			FB.getNewPage(regionPaging.next + "&q=" + keywords, function(response) { 
-				regionPaging = response.paging;
-				var addedPlaces = addNewPlaces(response.data);
+// 				FB.getExtendedInformation(sorted, function(response) {
+// 					sortExperiences(null, response);
+// 				});
+// 			});
+// 		}
+// 	}
 
-				for (var i = addedPlaces.length - 1; i >= 0; i--) {
-					getExperiencesByPlace(addedPlaces[i].id);
-				};
-			});
-		} else {
-			FB.findPlacesByKeywords(keywords, function(response) {
-				regionPaging = response.paging;
+// 	function getMorePlaces(keywords) {
+// 		if(regionPaging) {
+// 			FB.getNewPage(regionPaging.next + "&q=" + keywords, function(response) { 
+// 				regionPaging = response.paging;
+// 				var addedPlaces = addNewPlaces(response.data);
 
-				var addedPlaces = addNewPlaces(response.data);
+// 				for (var i = addedPlaces.length - 1; i >= 0; i--) {
+// 					getExperiencesByPlace(addedPlaces[i].id);
+// 				};
+// 			});
+// 		} else {
+// 			FB.findPlacesByKeywords(keywords, function(response) {
+// 				regionPaging = response.paging;
 
-				for (var i = addedPlaces.length - 1; i >= 0; i--) {
-					getExperiencesByPlace(addedPlaces[i].id);
-				};
-			});
-		}
-	}
+// 				var addedPlaces = addNewPlaces(response.data);
 
-	function loadCheckin(checkin) {
-		FB.getUser(checkin.author_uid, function(response) {
-			scope.showcase.author = response;
-			scope.$apply(scope.showcase);
-		});
-	}
+// 				for (var i = addedPlaces.length - 1; i >= 0; i--) {
+// 					getExperiencesByPlace(addedPlaces[i].id);
+// 				};
+// 			});
+// 		}
+// 	}
 
-	function loadPhoto(photo) {
-		FB.getUser(photo.owner, function(response) {
-			scope.showcase.author = response;
-			scope.$apply(scope.showcase);
-		});
-	}
+// 	function loadCheckin(checkin) {
+// 		FB.getUser(checkin.author_uid, function(response) {
+// 			scope.showcase.author = response;
+// 			scope.$apply(scope.showcase);
+// 		});
+// 	}
 
-	function loadStatus(status) {
-		FB.getUser(status.uid, function(response) {
-			scope.showcase.author = response;
-			scope.$apply(scope.showcase);
-		});
-	}
-}
+// 	function loadPhoto(photo) {
+// 		FB.getUser(photo.owner, function(response) {
+// 			scope.showcase.author = response;
+// 			scope.$apply(scope.showcase);
+// 		});
+// 	}
+
+// 	function loadStatus(status) {
+// 		FB.getUser(status.uid, function(response) {
+// 			scope.showcase.author = response;
+// 			scope.$apply(scope.showcase);
+// 		});
+// 	}
+// }
 
 function ItineraryCtrl(scope, rootScope, Facebook) {
 	scope.$on('addToItinerary', addToItinerary);
@@ -416,4 +457,4 @@ ItineraryCtrl.$inject = ['$scope', '$rootScope', 'Facebook'];
 WanderCtrl.$inject = ['$scope', '$rootScope', '$cookies', 'Facebook'];
 LoginCtrl.$inject = ['$scope'];
 MapCtrl.$inject = ['$scope', '$cookies', '$location', 'Facebook'];
-ExperienceCtrl.$inject = ['$scope', '$rootScope', 'Facebook'];
+// ExperienceCtrl.$inject = ['$scope', '$rootScope', 'Facebook'];
