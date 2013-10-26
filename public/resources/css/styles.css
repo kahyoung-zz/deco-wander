@@ -5,7 +5,7 @@ html,body, .main, .view, .sub-main{
 	max-width: 100%;
 	min-height: 100%;
 	max-height: 100%;
-	background: url('/resources/images/clouds.png');
+	background: url('/resources/images/Clouds.png');
 	background-position:top;
 	background-repeat:repeat-x;
 	-webkit-background-size: contain;
@@ -318,7 +318,7 @@ Main App CSS
 }
 
 .experience-stream .top {
-background: url('/resources/images/clouds.png');
+background: url('/resources/images/Clouds.png');
 	background-position:top;
 	background-repeat:repeat-x;
 	-webkit-background-size: contain;
