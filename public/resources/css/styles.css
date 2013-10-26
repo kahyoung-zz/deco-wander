@@ -59,12 +59,21 @@ body {
 }
 
 .clouds{
-	z-index: 0;
+	z-index: 1;
 	position: absolute;
 	left:0;
 	top:0;
 	height:100%;
 	width:100%;
+	
+	background: url('/resources/images/clouds.png');
+	background-position:top;
+	background-repeat:repeat-x;
+	-webkit-background-size: contain;
+	-moz-background-size:contain;
+	-o-background-size:contain;
+	background-size: contain;
+	opacity: .4;
 	
 	
 	
