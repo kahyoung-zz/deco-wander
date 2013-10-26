@@ -9,7 +9,7 @@ min-height: 100%;
 max-height: 100%;
 
 font-family:Tahoma, Helvetica, sans-serif;
-background:url('/resources/images/Background%20Clouds.png');
+background:url('/resources/images/BackgroundClouds.png');
 background-repeat:no-repeat;
 
 }
@@ -18,13 +18,13 @@ background-repeat:no-repeat;
 margin: 0 auto;
 width: 100%;
 height: 100%;
-background:url('/resources/images/city%20silhouette.png');
-background-repeat:no-repeat;
+background:url('/resources/images/citysilhouette.png');
+background-repeat:repeat-x;
 background-position:bottom;
 -webkit-background-size: contain;
 -moz-background-size:contain;
 -o-background-size:contain;
-background-size: contain;
+background-size: 25%;
 }
 
 

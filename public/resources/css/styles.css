@@ -5,19 +5,28 @@ html,body, .main, .view, .sub-main{
 	max-width: 100%;
 	min-height: 100%;
 	max-height: 100%;
+	background: url('/resources/images/clouds.png');
+	background-position:top;
+	background-repeat:repeat-x;
+	-webkit-background-size: contain;
+	-moz-background-size:contain;
+	-o-background-size:contain;
+	background-size: contain;
+	
 	
 }
 body {
 	font: 14px/1.5em "Lucida Grande", Arial, sans-serif;
 	overflow: hidden;
+	
 }
 .ng-cloak { display: none;}
 .main {
 	min-width: 100%;
 	overflow: hidden;
-}
 	
 }
+
 .blur {
 	-webkit-filter: blur(15px);
 	-moz-filter   : blur(15px);
@@ -48,6 +57,18 @@ body {
 .stroke {
 	color: white;
 }
+
+.clouds{
+	z-index: 0;
+	position: absolute;
+	left:0;
+	top:0;
+	height:100%;
+	width:100%;
+	
+	
+	
+}
 .overlay, .underlay {
 	position: absolute;
 	left: 0;
@@ -68,64 +89,6 @@ body {
 	background-size: cover;
 	background-position: 50% 25%;
 }
-/*
-		Login CSS
-*/
-
-.splash {
-	padding: 2%;
-	background-repeat: no-repeat;
-	background-size: contain;
-	background-position: center;
-	box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	   -moz-box-sizing: border-box;
-	    -ms-box-sizing: border-box;
-	     -o-box-sizing: border-box;
-}
-	.splash.splash-logo {
-		height: 50%;
-		width: 100%;
-		background-image: url('/resources/images/wanderlogo.png');
-	}
-
-
-.login-wrapper {
-	position: relative;
-	width: 100%;
-	margin: 0 auto;
-	bottom: 45%;
-}
-.login.button{
-	position: absolute;
-	width: 242px;
-	left: 0;
-	right: 0;
-	margin: 0 auto;
-}
-
-	.login.button .buttonright{
-		padding:5px;
-		width: 180px;
-		background: #4d6fa9;
-		border-left: 2px solid rgba(255,255,255,1);
-		color:rgba(255,255,255,1);
-		font:  1em/35px "Arial";
-		text-align:center;
-		float:left;
-	}
-
-	.login.button .buttonleft{
-		display:inline-block;
-		padding: 5px;
-		float: left;
-		width: 40px;
-		background: #4d6fa9;
-		color:rgba(255,255,255,1);
-		font:bold 2em/35px "Arial";
-		text-align:center;
-	}
-
 
 /*
 Main App CSS 
@@ -141,6 +104,8 @@ Main App CSS
 	   -moz-box-sizing: border-box;
 	    -ms-box-sizing: border-box;
 	     -o-box-sizing: border-box;
+		 
+		 
 }
 	.top .logo {
 		position: relative;
@@ -154,16 +119,10 @@ Main App CSS
 			height: 100%;
 		}
 	.top .overlay {
-		z-index: 10;
-		background: url('/resources/images/Clouds.png');
-	background-position:top;
-	background-repeat:repeat-x;
-	-webkit-background-size: contain;
-	-moz-background-size:contain;
-	-o-background-size:contain;
-	background-size: contain;
+		z-index: 1;	
 		
 	}
+	
 	.top .drag-me-container{
 		position: relative;
 		z-index: 20;
@@ -178,6 +137,7 @@ Main App CSS
 		-ms-user-select: none;
 		user-select: none;
 		cursor: default;
+		
 	}
 		.top .drag-me-container .drag-me-inner{
 			position: absolute;
@@ -231,13 +191,14 @@ Main App CSS
 	   -moz-box-sizing: border-box;
 	    -ms-box-sizing: border-box;
 	     -o-box-sizing: border-box;
-	background:url('/resources/images/city%20silhouette.png');
-	background-repeat:no-repeat;
+		 
+	background:url('/resources/images/citysilhouette.png');
+	background-repeat:repeat-x;
 	background-position:bottom;
 	-webkit-background-size: contain;
 	-moz-background-size:contain;
 	-o-background-size:contain;
-	background-size: contain;
+	background-size: 25%;
 }
 	.bottom-content {
 		position: relative;
@@ -424,11 +385,10 @@ Main App CSS
 	.showcase-container .showcase-inner {
   		position: absolute;
 		margin: 0 auto;
-		width: 26%;
-		min-width:300px;
+		width: 26.5%;
 		left: 0;
 		right: 0;
-		margin-top: 4%;
+		margin-top: 3%;
 		z-index: 20;
 	}
 
@@ -493,6 +453,14 @@ Main App CSS
 			z-index: 1;
 		}
 
+	.showcase-container .showcase-outer{
+		position: absolute;
+		background: black;
+		opacity: 0.8;
+		min-width: 100%;
+		min-height: 100%;
+	}
+	
 	.showcase-container .showcase-outer{
 		position: absolute;
 		background: black;
