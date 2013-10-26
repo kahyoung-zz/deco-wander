@@ -5,6 +5,7 @@ html,body, .main, .view, .sub-main{
 	max-width: 100%;
 	min-height: 100%;
 	max-height: 100%;
+	
 }
 body {
 	font: 14px/1.5em "Lucida Grande", Arial, sans-serif;
@@ -15,14 +16,7 @@ body {
 	min-width: 100%;
 	overflow: hidden;
 }
-.sub-main{
-	background:url('/resources/images/city%20silhouette.png');
-	background-repeat:no-repeat;
-	background-position:bottom;
-	-webkit-background-size: contain;
-	-moz-background-size:contain;
-	-o-background-size:contain;
-	background-size: contain;
+	
 }
 .blur {
 	-webkit-filter: blur(15px);
@@ -165,7 +159,6 @@ Main App CSS
 		}
 	.top .overlay {
 		z-index: 10;
-		background:url('/resources/images/Clouds.png');
 		background-position:top;
 		background-repeat:no-repeat;
 		
@@ -237,6 +230,13 @@ Main App CSS
 	   -moz-box-sizing: border-box;
 	    -ms-box-sizing: border-box;
 	     -o-box-sizing: border-box;
+	background:url('/resources/images/city%20silhouette.png');
+	background-repeat:no-repeat;
+	background-position:bottom;
+	-webkit-background-size: contain;
+	-moz-background-size:contain;
+	-o-background-size:contain;
+	background-size: contain;
 }
 	.bottom-content {
 		position: relative;
@@ -423,10 +423,10 @@ Main App CSS
 	.showcase-container .showcase-inner {
   		position: absolute;
 		margin: 0 auto;
-		width: 38%;
+		width: 26%;
 		left: 0;
 		right: 0;
-		margin-top: 10%;
+		margin-top: 4%;
 		z-index: 20;
 	}
 
@@ -498,3 +498,120 @@ Main App CSS
 		min-width: 100%;
 		min-height: 100%;
 	}
+	
+.itinerarylightbox-inner{
+	position: absolute;
+	margin: 0 auto;
+	width: 20%;
+	height: 65%;
+	left: 0;
+	right: 0;
+	z-index: 50;
+	margin-top: 100px;
+}
+
+.itinerarylightbox-container .itinerarylightbox-inner-container .itinerarylightbox-inner .lightboxtitle {
+	font-weight:bold;
+	margin-top:75px;
+	margin-left: 45px;
+	font-size:24px;
+	color:#666;
+}
+
+.itinerarylightbox-container .itinerarylightbox-inner-container .itinerarylightbox-inner .showcase-exit {
+	position: absolute;
+	z-index: 10;
+	right: -10px;
+	top: -10px;
+	cursor: pointer;
+}
+
+.itinerarylightbox-container .itinerarylightbox-inner-container .itinerarylightbox-inner .showcase-information .photos {
+	margin-left: 45px;
+}
+
+.itinerarylightbox-container .itinerarylightbox-inner-container .itinerarylightbox-inner .showcase-information .photos img {
+	
+	float: left;
+	width: 20px;
+	height: 20px;
+	margin: 2px;
+}
+
+.itinerarylightbox-container .itinerarylightbox-inner-container .itinerarylightbox-inner .showcase-information .title {
+	margin-left: 45px;
+}
+
+.printer-container img {
+	position: absolute;
+	height: auto;
+	width: auto;
+	max-height: 50px;
+	max-width: 50px;
+	bottom: 0;
+	left: 0;
+	margin-bottom: 2%;
+	margin-left: 2%;
+	cursor:pointer;
+}
+.bin-container img {
+	position: absolute;
+	height: auto;
+	width: auto;
+	max-height: 50px;
+	max-width: 50px;
+	bottom: 0;
+	right: 0;
+	margin-bottom: 2%;
+	margin-right: 2%;
+	cursor:pointer;
+}
+
+.friendslightbox-inner{
+	position: absolute;
+	margin: 0 auto;
+	width: 20%;
+	height: 65%;
+	left: 0;
+	right: 0;
+	z-index: 50;
+	margin-top: 100px;
+}
+
+.friendslightbox-container .friendslightbox-inner-container .friendslightbox-inner .showcase-information {
+	position: relative;
+	
+}
+
+.friendslightbox-container .friendslightbox-inner-container .friendslightbox-inner .lightboxtitle {
+	font-weight:bold;
+	margin-top:20px;
+	margin-left: 20px;
+	font-size:20px;
+	color:#666;
+}
+
+.friendslightbox-container .friendslightbox-inner-container .friendslightbox-inner .showcase-exit {
+	position: absolute;
+	z-index: 10;
+	right: -10px;
+	top: -10px;
+	cursor: pointer;
+}
+
+.friendslightbox-container .friendslightbox-inner-container .friendslightbox-inner .showcase-information .photos {
+	position: relative;
+	margin-left: 20px;
+}
+
+.friendslightbox-container .friendslightbox-inner-container .friendslightbox-inner .showcase-information .photos img {
+	width: 50px;
+	height: 50px;
+	margin: 2px;
+}
+
+.friendslightbox-container .friendslightbox-inner-container .friendslightbox-inner .showcase-information .username {
+	margin-top: 18px;
+	margin-left: 90px;
+	position: absolute;
+}
