@@ -17,10 +17,20 @@ function WanderCtrl(scope, rootScope, cookies, FB) {
 }
 
 function LoginCtrl(scope) {
+	FB.getLoginStatus(function(response) {
+		if (response.status === 'connected') {
+			window.location = FB.getRedirectURL() + '/#/app';	
+		}
+	});
 }
 
 
 function MapCtrl(scope, cookies, location, FB) {
+	FB.getLoginStatus(function(response) {
+		if (response.status != 'connected') {
+			window.location = FB.getRedirectURL();
+		}
+	});
 	var map;
 	var blurMap;
 	var geocoder = new google.maps.Geocoder();
