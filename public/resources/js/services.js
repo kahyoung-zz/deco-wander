@@ -13,8 +13,9 @@ angular.module('WanderApp.services', []).
     //Store information about the application here
     var appId = "568077023249265";
   	var appSecret = "86a2efda2032238a960e70fe3e825bdf";
-    var FBscope = {'scope': 'user_about_me,user_activities,user_birthday,user_checkins,user_education_history,user_events,user_groups,user_hometown,user_interests,user_likes,user_location,user_notes,user_photos,user_questions,user_relationships,user_relationship_details,user_religion_politics,user_status,user_subscriptions,user_videos,user_website,user_work_history,friends_about_me,friends_activities,friends_birthday,friends_checkins,friends_education_history,friends_events,friends_groups,friends_hometown,friends_interests,friends_likes,friends_location,friends_notes,friends_photos,friends_questions,friends_relationships,friends_relationship_details,friends_religion_politics,friends_status,friends_subscriptions,friends_videos,friends_website,friends_work_history'};
-
+    var FBscope = ['user_about_me,user_activities,user_birthday,user_checkins,user_education_history,user_events,user_groups,user_hometown,user_interests,user_likes,user_location,user_notes,user_photos,user_questions,user_relationships,user_relationship_details,user_religion_politics,user_status,user_subscriptions,user_videos,user_website,user_work_history,friends_about_me,friends_activities,friends_birthday,friends_checkins,friends_education_history,friends_events,friends_groups,friends_hometown,friends_interests,friends_likes,friends_location,friends_notes,friends_photos,friends_questions,friends_relationships,friends_relationship_details,friends_religion_politics,friends_status,friends_subscriptions,friends_videos,friends_website,friends_work_history'];
+    var domain = 'localhost:8080';
+    var uri = encodeURI('http://'+domain+'/#/app');
     // Throw error if FB does not exist (not yet instantiated)
     if(!FB) throw new Error('Facebook not loaded');
 
@@ -93,6 +94,9 @@ angular.module('WanderApp.services', []).
         api: function(path, callback) {
           FB.api(path, callback);
         },
+        fql: function(fql, callback) {
+          FB.api('fql', { q : fql }, callback);
+        },
         getUser: function(user, callback) {
           FB.api('/' + user +'?fields=name,picture', callback)
         },
@@ -111,22 +115,45 @@ angular.module('WanderApp.services', []).
         login : function(callback) {
           FB.login(callback, FBscope);
         },
+        loginNoPopup : function(callback) {
+          FB.getLoginStatus(function(response) {
+              if (response.status === 'connected') {
+                  window.location.href=uri;
+              } else {
+                  window.location = encodeURI("https://m.facebook.com/dialog/oauth?client_id="+appId+"&redirect_uri=http://localhost:8080&display=popup&scope="+FBscope);
+              }
+          });
+        },
         logout : function() {
           FB.logout(function(response){
             window.location.href = '/';
           });
         },
-        findPlacesByKeywords: function(keywords, callback) {
-          FB.api('/search?type=place&q='+keywords+'&fields=id,name', callback);
-        },
-        searchLocationByCenter : function(lat, longit, distance, callback) {
-          FB.api('/search?type=location&center=' + lat + ',' + longit  +'&distance=' + distance+ '&fields=id,type&limit=25', function(response) {
-            var experiences = sortByType(response.data);
-            getExtendedInformation(experiences, callback);
-          });
+        getPlacesByLatLngAndKeywords: function(lat, lng, keywords, callback) {
+          if(!keywords) keywords = '';
+          var query = encodeURI('/search?type=place&q='+keywords+'&fields=id,name&center='+lat+','+lng+'&limit=25');
+          console.log(query);
+          FB.api(query, callback);
         },
         getExperiencesByPlace : function(id, callback) {
           FB.api('/search?type=location&place=' + id + '&fields=id,type', callback);
+        },
+        getPhotosFromPlace : function(place, callback) {
+          var query = "SELECT object_id, src, src_big, owner FROM photo WHERE owner = " + place + 'LIMIT 24';
+          this.fql(query, function(response) {
+            response.place = place;
+            callback(response);
+          });
+        },
+        getMorePhotosFromPlace : function(place, offset, callback) {
+          var query = "SELECT object_id, src, src_big, owner FROM photo WHERE owner = " + place + 'LIMIT 24 OFFSET ' + offset;
+          this.fql(query, function(response) {
+            response.place = place;
+            callback(response);
+          });
+        },
+        getNumberOfFriendsCheckedIn : function(place) {
+          //select author_uid, tagged_uids from checkin where target_id = place
         },
         getNewPage : function(url, callback) {
           $http.get(url).success(callback);
@@ -136,25 +163,6 @@ angular.module('WanderApp.services', []).
         },
         getExtendedInformation : function(sorted, callback) {
           getExtendedInformation(sorted, callback);
-        },
-        getPlacesByCoords : function(lat, lon, callback) {
-          FB.api('/search?type=place&q=*&center=' + lat + ',' + lon + '&fields=id', callback);
-        },
-        getPlacesWithExperiencesByCoords : function(lat, lon, callback) {
-          this.getPlacesByCoords(lat, lon, function(response) {
-            var places = [];
-            for (var i = response.data.length - 1; i >= 0; i--) {
-              places.push(response.data[i].id);
-            };
-            console.log(places);
-          });
-          //   FB.api({
-          //     method: 'fql',
-          //     query: {
-          //       'SELECT id'
-          //     }
-          //   }, callback);
-          // })
         }
     }
   }])
