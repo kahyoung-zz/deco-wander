@@ -120,7 +120,7 @@ angular.module('WanderApp.services', []).
               if (response.status === 'connected') {
                   window.location.href=uri;
               } else {
-                  window.location = encodeURI("https://m.facebook.com/dialog/oauth?client_id="+appId+"&redirect_uri=http://localhost:8080&display=popup&scope="+FBscope);
+                  window.location = encodeURI("https://m.facebook.com/dialog/oauth?client_id="+appId+"&redirect_uri=http://wander-int.herokuapp.com&display=popup&scope="+FBscope);
               }
           });
         },
