@@ -14,8 +14,8 @@ angular.module('WanderApp.services', []).
     var appId = "568077023249265";
   	var appSecret = "86a2efda2032238a960e70fe3e825bdf";
     var FBscope = ['user_about_me,user_activities,user_birthday,user_checkins,user_education_history,user_events,user_groups,user_hometown,user_interests,user_likes,user_location,user_notes,user_photos,user_questions,user_relationships,user_relationship_details,user_religion_politics,user_status,user_subscriptions,user_videos,user_website,user_work_history,friends_about_me,friends_activities,friends_birthday,friends_checkins,friends_education_history,friends_events,friends_groups,friends_hometown,friends_interests,friends_likes,friends_location,friends_notes,friends_photos,friends_questions,friends_relationships,friends_relationship_details,friends_religion_politics,friends_status,friends_subscriptions,friends_videos,friends_website,friends_work_history'];
-    var domain = 'localhost:8080';
-    var uri = encodeURI('http://'+domain+'/#/app');
+    var domain = 'http://localhost:8080';
+    var uri = encodeURI(domain+'/#/app');
     // Throw error if FB does not exist (not yet instantiated)
     if(!FB) throw new Error('Facebook not loaded');
 
@@ -115,18 +115,21 @@ angular.module('WanderApp.services', []).
         login : function(callback) {
           FB.login(callback, FBscope);
         },
+        getRedirectURL : function() {
+          return domain;
+        },
         loginNoPopup : function(callback) {
           FB.getLoginStatus(function(response) {
               if (response.status === 'connected') {
                   window.location.href=uri;
               } else {
-                  window.location = encodeURI("https://m.facebook.com/dialog/oauth?client_id="+appId+"&redirect_uri=http://wander-int.herokuapp.com&display=popup&scope="+FBscope);
+                  window.location = encodeURI("https://m.facebook.com/dialog/oauth?client_id="+appId+"&redirect_uri="+domain+"&display=popup&scope="+FBscope);
               }
           });
         },
         logout : function() {
           FB.logout(function(response){
-            window.location.href = '/';
+            window.location= encodeURI(domain);
           });
         },
         getPlacesByLatLngAndKeywords: function(lat, lng, keywords, callback) {
