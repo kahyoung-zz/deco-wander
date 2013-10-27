@@ -262,6 +262,8 @@ Main App CSS
 
 .experience-gallery-container{
 	background-color: #F8F8F8;
+	position: relative;
+	z-index: 10;
 }
 .experience-gallery {
 	width: 100%;
@@ -293,7 +295,9 @@ Main App CSS
 		width: 150px;
 		height: 150px;
 	}
-
+		.experience-gallery .photo-thumb.ui-draggable-dragging {
+			opacity: 0.5;
+		}
 	.experience-gallery .photo-thumb img{
 		display: none;
 	}
