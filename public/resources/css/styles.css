@@ -421,14 +421,13 @@ background: url('/resources/images/Clouds.png');
 	}
 	.showcase-container .showcase-inner {
   		position: absolute;
-		margin: 0 auto;
+		margin:auto;
 		width:35%;
+		top: 0;
+		bottom: 0;
 		left: 0;
 		right: 0;
-		margin-top: 3%;
 		z-index: 20;
-		min-width: 300px;
-		max-width: 500px;
 	}
 
 		.showcase-container .showcase-inner img{
