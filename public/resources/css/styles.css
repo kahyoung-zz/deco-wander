@@ -21,6 +21,8 @@ body {
 .touch {
 	-ms-touch-action: none;
 }
+/**
+	Depreciated, IE10 does not support blur
 .blur {
 	-webkit-filter: blur(15px);
 	-moz-filter   : blur(15px);
@@ -41,7 +43,7 @@ body {
 	-ms-filter    : blur(10px);
 	-o-filter     : blur(10px);
 	filter        : blur(10px);
-}
+}*/
 .button {
 	cursor: pointer;
 }
@@ -172,17 +174,9 @@ Main App CSS
 			}
 		#map-canvas {
 			position: relative;
-		}
-		.top #blur-map{
-			position: absolute;
-			left: 0;
-			top: 0;
 			height: 100%;
-			width: 100%;
+			top: 0;
 		}
-			.top #blur-map .gmnoprint{
-				display: none;
-			}
 .main-content {
 	position: relative;
 	top: 15%;
