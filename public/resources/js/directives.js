@@ -14,7 +14,7 @@ angular.module('WanderApp.directives', ['ngCookies']).
       restrict: 'A',
       link: function(scope, elm, attrs) {
         var options = {};
-        elm.addClass('draggable');
+        elm.addClass('touch');
         if(scope.$eval(attrs.dragMan)) options = scope.$eval(attrs.dragMan); //allow options to be passed in
         options.revert = 'invalid';
         options.scroll = false;
@@ -220,7 +220,7 @@ angular.module('WanderApp.directives', ['ngCookies']).
       link: function(scope, elm, attrs) {
         var options = {};
         scope.$on('get_new_photo_' + scope.photo.object_id, getNewPhoto);
-        elm.addClass('draggable');
+        elm.addClass('touch');
         if(scope.$eval(attrs.draggablePhoto)) options = scope.$eval(attrs.dragMan); //allow options to be passed in
         options.revert = 'invalid';
         options.scroll = false;
@@ -268,10 +268,9 @@ angular.module('WanderApp.directives', ['ngCookies']).
         link: function(scope, element, attrs){
           scope.showcase = {};
           scope.showcase.show = false;
-          
           scope.$on('showcase_init', initShowcase);
           scope.$on('new_showcase_photo', displayPhoto);
-
+          
           // Bind a swipe event to handle swiping to next/previous photo
           element.swipe({
             swipe : function(event, direction, distance, duration, fingerCount) {
@@ -297,7 +296,6 @@ angular.module('WanderApp.directives', ['ngCookies']).
           element.find('.showcase-outer').swipe({
             tap : function(event, target) {
               closeShowcase();
-              scope.$apply();
             }
           });
 
@@ -305,6 +303,7 @@ angular.module('WanderApp.directives', ['ngCookies']).
             // Clear the scope, hide the lightbox and remove close showcase functionality
             scope.showcase = {};
             scope.showcase.show = false;
+            scope.$apply();
             delete scope.closeShowcase;
             delete scope.getNewPhoto;
             // Remove blur class

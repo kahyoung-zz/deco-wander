@@ -18,7 +18,7 @@ body {
 	overflow: hidden;
 	
 }
-.draggable {
+.touch {
 	-ms-touch-action: none;
 }
 .blur {
