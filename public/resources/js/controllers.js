@@ -112,7 +112,7 @@ function MapCtrl(scope, cookies, location, FB) {
 	    maxZoom: 6,
 	    zoom: 2,
 	    backgroundColor: '#FFFFFF',
-	    center: new google.maps.LatLng(-25.0000, 135.000),
+	    center: new google.maps.LatLng(35.0000, 135.000),
 	    styles : mapStyles
 	};
 
