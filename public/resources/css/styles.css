@@ -489,6 +489,25 @@ background: url('/resources/images/Clouds.png');
 			height: 85%;
 			z-index: 1;
 		}
+		.showcase-container .showcase-inner .leftarrow {
+			position: absolute;
+			left: 20px;
+			height: 7%;
+			width: 7%;
+			top: 35%;
+			cursor:pointer;
+		}
+		
+		.showcase-container .showcase-inner .rightarrow {
+			position: absolute;
+			right: 20px;
+			height: 7%;
+			width: 7%;
+			top: 35%;
+			cursor:pointer;
+		}
+		
+		
 
 	.showcase-container .showcase-outer{
 		position: absolute;
@@ -505,6 +524,8 @@ background: url('/resources/images/Clouds.png');
 		min-width: 100%;
 		min-height: 100%;
 	}
+	
+	
 	
 .itinerary-outer{
 		position: absolute;
