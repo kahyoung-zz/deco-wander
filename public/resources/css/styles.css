@@ -19,7 +19,7 @@ body {
 	
 }
 .draggable {
-	-ms-touch-action: manipulation;
+	-ms-touch-action: none;
 }
 .blur {
 	-webkit-filter: blur(15px);
