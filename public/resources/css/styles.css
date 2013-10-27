@@ -5,17 +5,6 @@ html,body, .main, .view, .sub-main{
 	max-width: 100%;
 	min-height: 100%;
 	max-height: 100%;
-<<<<<<< HEAD
-=======
-	background: url('/resources/images/Clouds.png');
-	background-position:top;
-	background-repeat:repeat-x;
-	-webkit-background-size: contain;
-	-moz-background-size:contain;
-	-o-background-size:contain;
-	background-size: contain;
-	
->>>>>>> f0582881989c49aad23dff97be0e22c743866e62
 	
 }
 body {
@@ -29,7 +18,9 @@ body {
 	overflow: hidden;
 	
 }
-
+.draggable {
+	-ms-touch-action: manipulation;
+}
 .blur {
 	-webkit-filter: blur(15px);
 	-moz-filter   : blur(15px);

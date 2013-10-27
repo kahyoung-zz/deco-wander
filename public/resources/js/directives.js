@@ -14,6 +14,7 @@ angular.module('WanderApp.directives', ['ngCookies']).
       restrict: 'A',
       link: function(scope, elm, attrs) {
         var options = {};
+        elm.addClass('draggable');
         if(scope.$eval(attrs.dragMan)) options = scope.$eval(attrs.dragMan); //allow options to be passed in
         options.revert = 'invalid';
         options.scroll = false;
@@ -219,7 +220,7 @@ angular.module('WanderApp.directives', ['ngCookies']).
       link: function(scope, elm, attrs) {
         var options = {};
         scope.$on('get_new_photo_' + scope.photo.object_id, getNewPhoto);
-
+        elm.addClass('draggable');
         if(scope.$eval(attrs.draggablePhoto)) options = scope.$eval(attrs.dragMan); //allow options to be passed in
         options.revert = 'invalid';
         options.scroll = false;
