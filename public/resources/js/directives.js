@@ -320,6 +320,7 @@ angular.module('WanderApp.directives', ['ngCookies']).
 
           function getNewPhoto(photoId, type) {
             scope.$broadcast('get_new_photo_' + photoId, type);
+            scope.$apply();
           }
 
           function displayPhoto(event, photo) {
