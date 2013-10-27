@@ -557,8 +557,12 @@ background: url('/resources/images/Clouds.png');
 	cursor: pointer;
 }
 .itinerarylightbox-container .itinerarylightbox-inner-container .itinerarylightbox-inner .showcase-information {
-	height: auto;
-	overflow: auto;
+	height: 100%;
+	overflow-x: auto;
+	min-width: 20%;
+	max-width: 100%;
+	min-height: 68%;
+	max-height: 80%;
 }
 
 .itinerarylightbox-container .itinerarylightbox-inner-container .itinerarylightbox-inner .showcase-information .place {
