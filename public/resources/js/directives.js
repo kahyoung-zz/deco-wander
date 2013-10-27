@@ -199,7 +199,14 @@ angular.module('WanderApp.directives', ['ngCookies']).
         restrict: 'E', 
         templateUrl: '/resources/partials/itinerary.html',
         link: function(scope, element, attrs){
-          //   
+          var options = {};
+          options['accept'] = '.photo-thumb';
+          options['drop'] = function(event, ui) {
+            var photoScope = ui.draggable.scope();
+            scope.$emit('itinerary_photo', photoScope.place, photoScope.photo);
+            scope.$apply();
+          };
+          element.find('.itinerary').droppable(options);   
         }
    };
  }])
@@ -223,7 +230,10 @@ angular.module('WanderApp.directives', ['ngCookies']).
         if(scope.$eval(attrs.draggablePhoto)) options = scope.$eval(attrs.dragMan); //allow options to be passed in
         options.revert = 'invalid';
         options.scroll = false;
+        options.helper = 'clone';
+        options.distance = 15;
         options.revertDuration = 200;
+        //options.delay = 300;
 
         elm.draggable(options).click(function() {
             if ( $(this).is('.ui-draggable-dragging') ) {
