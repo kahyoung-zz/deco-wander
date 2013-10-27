@@ -63,13 +63,13 @@ body {
 	width:100%;
 	
 	background: url('/resources/images/Clouds.png');
-	background-position:top;
+	background-position: bottom;
 	background-repeat:repeat-x;
 	-webkit-background-size: contain;
 	-moz-background-size:contain;
 	-o-background-size:contain;
 	background-size: contain;
-	opacity: .4;
+	opacity: .8;
 	
 	
 	
@@ -261,7 +261,7 @@ Main App CSS
 		}
 
 .experience-gallery-container{
-	background-color: #F8F8F8;
+	background-color: #FFFFFF;
 	position: relative;
 	z-index: 10;
 }
@@ -326,8 +326,8 @@ Main App CSS
 }
 
 .experience-stream .top {
-background: url('/resources/images/Clouds.png');
-	background-position:top;
+	background: url('/resources/images/Clouds.png');
+	background-position: bottom;
 	background-repeat:repeat-x;
 	-webkit-background-size: contain;
 	-moz-background-size:contain;
