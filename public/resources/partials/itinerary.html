@@ -2,7 +2,7 @@
 	<itinerary-icon></itinerary-icon>
 	<div class="itinerary-places">
 		<div class="place-container" ng-repeat="place in iplaces">
-			<div class="photo-thumb" ng-repeat="experience in place.experiences" ng-style="{'background-image': 'url(' + experience.src_big + ')'}">
+			<div class="photo-thumb" ng-repeat="photo in place.photos" ng-style="{'background-image': 'url(' + photo.src_big + ')'}">
 			</div>
 		</div>
 	</div>

@@ -32,7 +32,6 @@ function MapCtrl(scope, cookies, location, FB) {
 		}
 	});
 	var map;
-	var blurMap;
 	var geocoder = new google.maps.Geocoder();
 
 	var mapStyles = [
@@ -122,22 +121,23 @@ function MapCtrl(scope, cookies, location, FB) {
 	overlay.draw = function() {};
 	overlay.setMap(map);
 
-	blurMap = new google.maps.Map(document.getElementById('blur-map'), mapOptions);
-	blurMap.setOptions({draggable: false, zoomControl: false, scrollwheel: false, disableDoubleClickZoom: true});
-
-	function map_recenter(map,latlng,offsetx,offsety) {
-	    var point1 = map.getProjection().fromLatLngToPoint(
-	        (latlng instanceof google.maps.LatLng) ? latlng : map.getCenter()
-	    );
-	    var point2 = new google.maps.Point(
-	        ( (typeof(offsetx) == 'number' ? offsetx : 0) / Math.pow(2, map.getZoom()) ) || 0,
-	        ( (typeof(offsety) == 'number' ? offsety : 0) / Math.pow(2, map.getZoom()) ) || 0
-	    );  
-	    map.setCenter(map.getProjection().fromPointToLatLng(new google.maps.Point(
-	        point1.x - point2.x,
-	        point1.y + point2.y
-	    )));
-	}
+	/**
+	*
+		Depreciated function to recenter a given map - was used to create a mimic map in the banner for blur
+	*/
+	// function map_recenter(map,latlng,offsetx,offsety) {
+	//     var point1 = map.getProjection().fromLatLngToPoint(
+	//         (latlng instanceof google.maps.LatLng) ? latlng : map.getCenter()
+	//     );
+	//     var point2 = new google.maps.Point(
+	//         ( (typeof(offsetx) == 'number' ? offsetx : 0) / Math.pow(2, map.getZoom()) ) || 0,
+	//         ( (typeof(offsety) == 'number' ? offsety : 0) / Math.pow(2, map.getZoom()) ) || 0
+	//     );  
+	//     map.setCenter(map.getProjection().fromPointToLatLng(new google.maps.Point(
+	//         point1.x - point2.x,
+	//         point1.y + point2.y
+	//     )));
+	// }
 
 	// Set min and max latitudes for the main map
 	var minLat = new google.maps.LatLng(-43, -180).lat();
@@ -146,16 +146,21 @@ function MapCtrl(scope, cookies, location, FB) {
     // Store the last valid center
 	var lastValidCenter = map.getCenter();
 
-	google.maps.event.addListener(blurMap, 'projection_changed', function(){
-		map_recenter(blurMap, map.getCenter(), 0, -($('#map-canvas').height()/2 + $('#blur-map').height()/2));
-	});
+	/**
+	*
+		Part of depreciated blur map
+	*
+	*/
+	// google.maps.event.addListener(blurMap, 'projection_changed', function(){
+	// 	map_recenter(blurMap, map.getCenter(), 0, -($('#map-canvas').height()/2 + $('#blur-map').height()/2));
+	// });
 
 	google.maps.event.addListener(map, 'center_changed', function(){ 
 		var currentLat = map.getCenter().lat();
 		if (currentLat > minLat && currentLat < maxLat) {
 	        // still within valid bounds, so save the last valid position
 	        lastValidCenter = map.getCenter();
-	        map_recenter(blurMap, map.getCenter(), 0, -($('#map-canvas').height()/2 + $('#blur-map').height()/2));
+	        // map_recenter(blurMap, map.getCenter(), 0, -($('#map-canvas').height()/2 + $('#blur-map').height()/2));
 	    } else {
 	    // not valid anymore => return to last valid position
 		    var newCenter = new google.maps.LatLng(lastValidCenter.lat(), map.getCenter().lng());
@@ -164,10 +169,10 @@ function MapCtrl(scope, cookies, location, FB) {
     	}
 	});
 
-	google.maps.event.addListener(map, 'zoom_changed', function(e){
-		blurMap.setZoom(map.getZoom());
-		map_recenter(blurMap, map.getCenter(), 0, -($('#map-canvas').height()/2 + $('#blur-map').height()/2));
-	});
+	// google.maps.event.addListener(map, 'zoom_changed', function(e){
+	// 	blurMap.setZoom(map.getZoom());
+	// 	map_recenter(blurMap, map.getCenter(), 0, -($('#map-canvas').height()/2 + $('#blur-map').height()/2));
+	// });
 
 
 	scope.loadPlacesByPosition = function(x, y) {
@@ -433,23 +438,30 @@ function MapCtrl(scope, cookies, location, FB) {
 // }
 
 function ItineraryCtrl(scope, rootScope, Facebook) {
-	scope.$on('addToItinerary', addToItinerary);
+	scope.$on('itinerary_photo', addToItinerary);
 	scope.iplaces = [];
-	scope.iplaces.indexing = [];
+	var indexing = [];
 
-	function addToItinerary(event, item) {
-		var index = scope.iplaces.indexing.indexOf(item.place.id);
-
+	function addToItinerary(event, place, photo) {
+		var index = indexing.indexOf(place.id);
 		if(index == -1) {
-			scope.iplaces.indexing.push(item.place.id);
-			scope.iplaces.push({
-				'name' : item.place.name,
-				'experiences' : [],
-			});
-			index = scope.iplaces.indexing.indexOf(item.place.id);
-		}
+			var last = indexing.length;
+			indexing.push(place.id);
 
-		scope.iplaces[index].experiences.push(item.experience);
+			scope.iplaces[last] = {};
+			scope.iplaces[last].place = place;
+			scope.iplaces[last].photos = [photo];
+		} else {
+			// If the photo already exists, then do nothing
+			for (var i = scope.iplaces[index].photos.length - 1; i >= 0; i--) {
+				if(scope.iplaces[index].photos[i].object_id == photo.object_id) {
+					return;
+				}
+			};
+
+			// Only add the photo if it is completely new
+			scope.iplaces[index].photos.push(photo);
+		}
 	}
 }
 

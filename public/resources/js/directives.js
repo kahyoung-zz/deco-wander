@@ -14,6 +14,7 @@ angular.module('WanderApp.directives', ['ngCookies']).
       restrict: 'A',
       link: function(scope, elm, attrs) {
         var options = {};
+        elm.addClass('touch');
         if(scope.$eval(attrs.dragMan)) options = scope.$eval(attrs.dragMan); //allow options to be passed in
         options.revert = 'invalid';
         options.scroll = false;
@@ -28,7 +29,7 @@ angular.module('WanderApp.directives', ['ngCookies']).
       link: function(scope, elm, attrs) {
         var options = scope.$eval(attrs.mapDroppable); //allow options to be passed in
         options.drop = function(event, ui) {
-          scope.loadPlacesByPosition(event.pageX, event.pageY - $('.sub-main .top').outerHeight());
+          scope.loadPlacesByPosition(event.pageX, event.pageY);
           ui.draggable.draggable('option', 'revert', true);
         };
         elm.droppable(options);
@@ -197,7 +198,6 @@ angular.module('WanderApp.directives', ['ngCookies']).
    return {
         restrict: 'E', 
         templateUrl: '/resources/partials/itinerary.html',
-        controller: ItineraryCtrl,
         link: function(scope, element, attrs){
           //   
         }
@@ -207,9 +207,9 @@ angular.module('WanderApp.directives', ['ngCookies']).
   .directive('itineraryIcon', ['$timeout','$compile', function($timeout, $compile) {
    return {
         restrict: 'E', 
+        controller: 'ItineraryCtrl',
         templateUrl: '/resources/partials/itineraryIcon.html',
         link: function(scope, element, attrs){
-          //   
         }
    };
  }])
@@ -219,7 +219,7 @@ angular.module('WanderApp.directives', ['ngCookies']).
       link: function(scope, elm, attrs) {
         var options = {};
         scope.$on('get_new_photo_' + scope.photo.object_id, getNewPhoto);
-
+        elm.addClass('touch');
         if(scope.$eval(attrs.draggablePhoto)) options = scope.$eval(attrs.dragMan); //allow options to be passed in
         options.revert = 'invalid';
         options.scroll = false;
@@ -256,6 +256,7 @@ angular.module('WanderApp.directives', ['ngCookies']).
             
           var newPhoto = scope.photos[index];
           scope.$emit('new_showcase_photo', newPhoto);
+          scope.$apply();
         }
       }
     };
@@ -267,10 +268,9 @@ angular.module('WanderApp.directives', ['ngCookies']).
         link: function(scope, element, attrs){
           scope.showcase = {};
           scope.showcase.show = false;
-          
           scope.$on('showcase_init', initShowcase);
           scope.$on('new_showcase_photo', displayPhoto);
-
+          
           // Bind a swipe event to handle swiping to next/previous photo
           element.swipe({
             swipe : function(event, direction, distance, duration, fingerCount) {
@@ -285,10 +285,16 @@ angular.module('WanderApp.directives', ['ngCookies']).
             }
           });
 
-          // Bind a 'tap' event to the photo itself  [temporary] to handle going to next photo
-          element.find('.showcase-inner img').swipe({
+          // Bind a 'tap' event to the arrows to go next and previous
+          element.find('.showcase-inner .rightarrow').swipe({
             tap : function( event, target) {
               getNewPhoto(scope.showcase.photo.object_id, 'next');
+            }
+          });
+
+          element.find('.showcase-inner .leftarrow').swipe({
+            tap : function( event, target) {
+              getNewPhoto(scope.showcase.photo.object_id, 'prev');
             }
           });
           
@@ -296,23 +302,27 @@ angular.module('WanderApp.directives', ['ngCookies']).
           element.find('.showcase-outer').swipe({
             tap : function(event, target) {
               closeShowcase();
-              scope.$apply();
             }
           });
 
+          scope.addToItinerary = function(place, photo) {
+            scope.$emit('itinerary_photo', place, photo);
+          };
           function closeShowcase() {
             // Clear the scope, hide the lightbox and remove close showcase functionality
             scope.showcase = {};
             scope.showcase.show = false;
+            scope.$apply();
             delete scope.closeShowcase;
             delete scope.getNewPhoto;
-            // Remove blur class
-            element.next().removeClass('blur');
-            element.next().next().removeClass('blur');
+            // Remove blur class - depreciated, IE10 does not support blur
+            // element.next().removeClass('blur');
+            // element.next().next().removeClass('blur');
           }
 
           function getNewPhoto(photoId, type) {
             scope.$broadcast('get_new_photo_' + photoId, type);
+            scope.$apply();
           }
 
           function displayPhoto(event, photo) {
@@ -337,9 +347,9 @@ angular.module('WanderApp.directives', ['ngCookies']).
             scope.showcase.show = true;
             scope.$apply();
 
-            //Add blur to the elements behind
-            element.next().addClass('blur');
-            element.next().next().addClass('blur');
+            //Add blur to the elements behind - depreciated, IE10 does not support blur
+            // element.next().addClass('blur');
+            // element.next().next().addClass('blur');
           }
         }
    };
