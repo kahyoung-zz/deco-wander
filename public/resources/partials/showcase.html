@@ -1,14 +1,14 @@
 <div class="showcase-container">
 	<div class="showcase-inner-container">
 		<div class="showcase-inner">
-			<div class="showcase-exit" ng-click="closeExperience()">
+			<div class="showcase-exit" ng-click="closeShowcase()">
 		    	<img src="/resources/images/cross.png">
 		    </div>
-			<!-- <div class="showcase-crisp" ng-style="{'background-image': 'url(' + showcase.experience.src_big + ')'}">
+			<!-- <div class="showcase-crisp" ng-style="{'background-image': 'url(' + showcase.photo.src_big + ')'}">
 			</div> -->
-			<img ng-src="{{showcase.experience.src_big}}">
+			<img ng-src="{{showcase.photo.src_big}}">
 			<div class="showcase-information">
-				<div class="itinerary" ng-click="addToItinerary(showcase.place, showcase.experience);">
+				<div class="itinerary" ng-click="addToItinerary(showcase.place, showcase.photo);">
 					<itinerary-icon></itinerary-icon>
 				</div>
                 <div class="leftarrow">
@@ -24,6 +24,6 @@
 			</div>
 		</div>
 	</div>
-	<div class="showcase-outer" ng-click="closeExperience()">
+	<div class="showcase-outer">
 	</div>
 </div>

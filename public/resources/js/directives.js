@@ -218,22 +218,49 @@ angular.module('WanderApp.directives', ['ngCookies']).
       restrict: 'A',
       link: function(scope, elm, attrs) {
         var options = {};
+        scope.$on('get_new_photo_' + scope.photo.object_id, getNewPhoto);
+
         if(scope.$eval(attrs.draggablePhoto)) options = scope.$eval(attrs.dragMan); //allow options to be passed in
         options.revert = 'invalid';
         options.scroll = false;
         options.revertDuration = 200;
-        elm.draggable(options).click(function() {
-           if ( $(this).is('.ui-draggable-dragging') ) {
 
-                  return;
+        elm.draggable(options).click(function() {
+            if ( $(this).is('.ui-draggable-dragging') ) {
+              return;
             }
-            scope.openExperience(scope.place, scope.experience);
             // click action here
+            scope.$emit('showcase_init', scope.place, scope.photo);
         });
+
+        function getNewPhoto(event, type) {
+          var index = scope.photos.indexOf(scope.photo);
+          if(index != -1) {
+            // If the index is the last one, reset to the first of this place
+            if(type == 'next') {
+              if(index < scope.photos.length - 1) {
+                index++;
+              } else {
+                index = 0;
+              }
+            } else {
+              if(index > 0) {
+                index--;
+              } else {
+                index = scope.photos.length - 1;
+              }
+            }
+          } else {
+            alert('Photo does not exist');
+          }
+            
+          var newPhoto = scope.photos[index];
+          scope.$emit('new_showcase_photo', newPhoto);
+        }
       }
     };
   })
-  .directive('experienceShowcase', ['$timeout','$compile', 'Facebook', function($timeout, $compile, FB) {
+  .directive('photoShowcase', ['$timeout','$compile', 'Facebook', function($timeout, $compile, FB) {
    return {
         restrict: 'E', 
         templateUrl: '/resources/partials/showcase.html',
@@ -241,29 +268,78 @@ angular.module('WanderApp.directives', ['ngCookies']).
           scope.showcase = {};
           scope.showcase.show = false;
           
-          function closeExperience() {
+          scope.$on('showcase_init', initShowcase);
+          scope.$on('new_showcase_photo', displayPhoto);
+
+          // Bind a swipe event to handle swiping to next/previous photo
+          element.swipe({
+            swipe : function(event, direction, distance, duration, fingerCount) {
+              switch(direction) {
+                case 'left':
+                  getNewPhoto(scope.showcase.photo.object_id, 'next');
+                  break;
+                case 'right':
+                  getNewPhoto(scope.showcase.photo.object_id, 'prev');
+                  break;
+              }
+            }
+          });
+
+          // Bind a 'tap' event to the photo itself  [temporary] to handle going to next photo
+          element.find('.showcase-inner img').swipe({
+            tap : function( event, target) {
+              getNewPhoto(scope.showcase.photo.object_id, 'next');
+            }
+          });
+          
+          // Bind a 'tap' event to the outer container to handle when the user clicks on the outer container rather than swipes
+          element.find('.showcase-outer').swipe({
+            tap : function(event, target) {
+              closeShowcase();
+              scope.$apply();
+            }
+          });
+
+          function closeShowcase() {
+            // Clear the scope, hide the lightbox and remove close showcase functionality
             scope.showcase = {};
             scope.showcase.show = false;
-            scope.closeExperience = null;
+            delete scope.closeShowcase;
+            delete scope.getNewPhoto;
+            // Remove blur class
             element.next().removeClass('blur');
             element.next().next().removeClass('blur');
           }
 
-          scope.openExperience = function(place, experience) { 
-            element.next().addClass('blur');
-            element.next().next().addClass('blur');
-            FB.getUser(experience.owner, function(response) {
+          function getNewPhoto(photoId, type) {
+            scope.$broadcast('get_new_photo_' + photoId, type);
+          }
+
+          function displayPhoto(event, photo) {
+            FB.getUser(photo.owner, function(response) {
               if(scope.showcase){
                 scope.showcase.user = {};
                 scope.showcase.user.fullName = response.name;
               }
               scope.$apply();
             });
+            scope.showcase.photo = photo;
+          }
 
-            scope.showcase.show = true;
+          function initShowcase(event, place, photo) { 
+            // Initiate closing the showcase
+            scope.closeShowcase = closeShowcase;
+            scope.getNewPhoto = getNewPhoto;
+
+            // Display the photo
+            displayPhoto(null, photo);
             scope.showcase.place = place;
-            scope.showcase.experience = experience;
-            scope.closeExperience = closeExperience;
+            scope.showcase.show = true;
+            scope.$apply();
+
+            //Add blur to the elements behind
+            element.next().addClass('blur');
+            element.next().next().addClass('blur');
           }
         }
    };

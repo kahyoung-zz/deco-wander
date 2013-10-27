@@ -135,11 +135,7 @@ angular.module('WanderApp.services', []).
         getPlacesByLatLngAndKeywords: function(lat, lng, keywords, callback) {
           if(!keywords) keywords = '';
           var query = encodeURI('/search?type=place&q='+keywords+'&fields=id,name&center='+lat+','+lng+'&limit=25');
-          console.log(query);
           FB.api(query, callback);
-        },
-        getExperiencesByPlace : function(id, callback) {
-          FB.api('/search?type=location&place=' + id + '&fields=id,type', callback);
         },
         getPhotosFromPlace : function(place, callback) {
           var query = "SELECT object_id, src, src_big, owner FROM photo WHERE owner = " + place + 'LIMIT 24';
@@ -157,9 +153,6 @@ angular.module('WanderApp.services', []).
         },
         getNumberOfFriendsCheckedIn : function(place) {
           //select author_uid, tagged_uids from checkin where target_id = place
-        },
-        getNewPage : function(url, callback) {
-          $http.get(url).success(callback);
         },
         sortExperiencesByType : function(experiences) {
           return sortByType(experiences);
