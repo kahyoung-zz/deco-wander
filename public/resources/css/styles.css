@@ -284,6 +284,14 @@ Main App CSS
 		font-size: 2em;
 		line-height: 1em;
 		color: #444444;
+		overflow: hidden;
+		width: 75%;
+		text-overflow: ellipsis;
+		-webkit-text-overflow: ellipsis;
+		   -moz-text-overflow: ellipsis;
+		    -ms-text-overflow: ellipsis;
+		     -o-text-overflow: ellipsis;
+
 	}
 		.experience-gallery .place-container .content-container {
 			height: 100%;
