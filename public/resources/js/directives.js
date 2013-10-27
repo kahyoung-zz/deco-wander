@@ -198,7 +198,6 @@ angular.module('WanderApp.directives', ['ngCookies']).
    return {
         restrict: 'E', 
         templateUrl: '/resources/partials/itinerary.html',
-        controller: ItineraryCtrl,
         link: function(scope, element, attrs){
           //   
         }
@@ -208,9 +207,9 @@ angular.module('WanderApp.directives', ['ngCookies']).
   .directive('itineraryIcon', ['$timeout','$compile', function($timeout, $compile) {
    return {
         restrict: 'E', 
+        controller: 'ItineraryCtrl',
         templateUrl: '/resources/partials/itineraryIcon.html',
         link: function(scope, element, attrs){
-          //   
         }
    };
  }])
@@ -306,6 +305,9 @@ angular.module('WanderApp.directives', ['ngCookies']).
             }
           });
 
+          scope.addToItinerary = function(place, photo) {
+            scope.$emit('itinerary_photo', place, photo);
+          };
           function closeShowcase() {
             // Clear the scope, hide the lightbox and remove close showcase functionality
             scope.showcase = {};

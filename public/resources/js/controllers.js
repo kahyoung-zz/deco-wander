@@ -438,23 +438,30 @@ function MapCtrl(scope, cookies, location, FB) {
 // }
 
 function ItineraryCtrl(scope, rootScope, Facebook) {
-	scope.$on('addToItinerary', addToItinerary);
+	scope.$on('itinerary_photo', addToItinerary);
 	scope.iplaces = [];
-	scope.iplaces.indexing = [];
+	var indexing = [];
 
-	function addToItinerary(event, item) {
-		var index = scope.iplaces.indexing.indexOf(item.place.id);
-
+	function addToItinerary(event, place, photo) {
+		var index = indexing.indexOf(place.id);
 		if(index == -1) {
-			scope.iplaces.indexing.push(item.place.id);
-			scope.iplaces.push({
-				'name' : item.place.name,
-				'experiences' : [],
-			});
-			index = scope.iplaces.indexing.indexOf(item.place.id);
-		}
+			var last = indexing.length;
+			indexing.push(place.id);
 
-		scope.iplaces[index].experiences.push(item.experience);
+			scope.iplaces[last] = {};
+			scope.iplaces[last].place = place;
+			scope.iplaces[last].photos = [photo];
+		} else {
+			// If the photo already exists, then do nothing
+			for (var i = scope.iplaces[index].photos.length - 1; i >= 0; i--) {
+				if(scope.iplaces[index].photos[i].object_id == photo.object_id) {
+					return;
+				}
+			};
+
+			// Only add the photo if it is completely new
+			scope.iplaces[index].photos.push(photo);
+		}
 	}
 }
 
