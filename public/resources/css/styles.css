@@ -387,8 +387,8 @@ background: url('/resources/images/Clouds.png');
 
 			.itinerary .itinerary-places .photo-thumb{
 				float: left;
-				width: 20px;
-				height: 20px;
+				width: 75px;
+				height: 75px;
 				margin: 2px;
 			}
 .showcase-container{
