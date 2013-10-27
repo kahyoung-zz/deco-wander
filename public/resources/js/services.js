@@ -138,7 +138,7 @@ angular.module('WanderApp.services', []).
           FB.api(query, callback);
         },
         getPhotosFromPlace : function(place, callback) {
-          var query = "SELECT object_id, src, src_big, owner FROM photo WHERE owner = " + place + 'LIMIT 24';
+          var query = "SELECT object_id, src, src_big, images, owner FROM photo WHERE owner = " + place + ' LIMIT 24';
           this.fql(query, function(response) {
             response.place = place;
             callback(response);

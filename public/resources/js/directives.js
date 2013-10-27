@@ -182,6 +182,15 @@ angular.module('WanderApp.directives', ['ngCookies']).
           if(!scope.place.loaded) scope.place.loaded = true;
           // Handles new photos and places it into this scope
           if(photos.data.length > 0) {
+            for (var i = photos.data.length - 1; i >= 0; i--) {
+              var photo = photos.data[i];
+              for (var j = photo.images.length - 1; j >= 0; j--) {
+                if(photo.images[j].height >= 150 && photo.images[j].width >= 150) {
+                  photo.tile_src = photo.images[j].source;
+                  break;
+                }
+              };
+            };
             scope.photos = scope.photos.concat(photos.data);
           } else {
             photoContainer.unbind('scroll', scrollHandler);
