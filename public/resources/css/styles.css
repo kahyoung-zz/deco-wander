@@ -373,21 +373,24 @@ background: url('/resources/images/Clouds.png');
 		}
 
 	.itinerary .itinerary-places{
-		float: right;
 		height: 100%;
-		width: 85%;
+    	overflow-x: scroll; 
+		overflow-y: hidden;   
+    	white-space: nowrap;
+		float: left;	
 		padding: 5px;
-		overflow: auto;
 		box-sizing: border-box;
 		-webkit-box-sizing: border-box;
 		   -moz-box-sizing: border-box;
 		    -ms-box-sizing: border-box;
 		     -o-box-sizing: border-box;
+		
 			 
 	}
 		.itinerary .itinerary-places .place-container{
 			float: left;
 			margin: 0 5px;
+
 		}
 
 			.itinerary .itinerary-places .photo-thumb{
@@ -481,7 +484,7 @@ background: url('/resources/images/Clouds.png');
 		}
 		.showcase-container .showcase-inner .leftarrow {
 			position: absolute;
-			left: 20px;
+			left: 10px;
 			height: 85%;
 			width: 6%;
 			cursor:pointer;
@@ -497,7 +500,7 @@ background: url('/resources/images/Clouds.png');
 		
 		.showcase-container .showcase-inner .rightarrow {
 			position: absolute;
-			right: 20px;
+			right: 10px;
 			height: 85%;
 			width: 6%;
 			cursor:pointer;
@@ -531,6 +534,13 @@ background: url('/resources/images/Clouds.png');
 	
 	
 	
+	.showcase-container .showcase-outer{
+		position: absolute;
+		background: black;
+		opacity: 0.8;
+		min-width: 100%;
+		min-height: 100%;
+	}
  .itinerary-outer{
 		position: absolute;
 		background: black;
@@ -575,12 +585,9 @@ background: url('/resources/images/Clouds.png');
 	cursor: pointer;
 }
 .itinerarylightbox-container .itinerarylightbox-inner-container .itinerarylightbox-inner .showcase-information {
-	height: 100%;
+	height: 80%;
 	overflow-x: auto;
-	min-width: 20%;
-	max-width: 100%;
-	min-height: 68%;
-	max-height: 80%;
+	
 }
 
 .itinerarylightbox-container .itinerarylightbox-inner-container .itinerarylightbox-inner .showcase-information .place {
@@ -651,26 +658,23 @@ background: url('/resources/images/Clouds.png');
 .friendslightbox-inner{
 	background:#FFF;
 	position: absolute;
-	margin: 0 auto;
+	margin:auto;
 	width: 400px;
 	height: 65%;
 	min-height:400px;
 	left: 0;
 	right: 0;
+	top: 0;
+	bottom: 0;
 	z-index: 50;
-	margin-top: 100px;
 	
 	
 }
 .friendslightbox-container .friendslightbox-inner-container .friendslightbox-inner .showcase-container {
 	margin-top: 16px;
-	overflow:scroll;
-	height: 100%;
-	max-height:90%;
-	min-height: 360px;
-	
-	
-	
+	overflow-y: scroll;
+	height: 91%;
+	min-height:350px;
 }
 
 .friendslightbox-container .friendslightbox-inner-container .friendslightbox-inner .showcase-information {
