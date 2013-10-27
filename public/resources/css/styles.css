@@ -377,12 +377,13 @@ background: url('/resources/images/Clouds.png');
 		height: 100%;
 		width: 85%;
 		padding: 5px;
-
+		overflow: auto;
 		box-sizing: border-box;
 		-webkit-box-sizing: border-box;
 		   -moz-box-sizing: border-box;
 		    -ms-box-sizing: border-box;
 		     -o-box-sizing: border-box;
+			 
 	}
 		.itinerary .itinerary-places .place-container{
 			float: left;
@@ -391,8 +392,8 @@ background: url('/resources/images/Clouds.png');
 
 			.itinerary .itinerary-places .photo-thumb{
 				float: left;
-				width: 75px;
-				height: 75px;
+				width: 90px;
+				height: 90px;
 				margin: 2px;
 			}
 .showcase-container{
