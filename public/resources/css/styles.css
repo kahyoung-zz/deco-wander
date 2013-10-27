@@ -63,13 +63,13 @@ body {
 	width:100%;
 	
 	background: url('/resources/images/Clouds.png');
-	background-position:top;
+	background-position: bottom;
 	background-repeat:repeat-x;
 	-webkit-background-size: contain;
 	-moz-background-size:contain;
 	-o-background-size:contain;
 	background-size: contain;
-	opacity: .4;
+	opacity: .8;
 	
 	
 	
@@ -261,7 +261,7 @@ Main App CSS
 		}
 
 .experience-gallery-container{
-	background-color: #F8F8F8;
+	background-color: #FFFFFF;
 	position: relative;
 	z-index: 10;
 }
@@ -284,6 +284,14 @@ Main App CSS
 		font-size: 2em;
 		line-height: 1em;
 		color: #444444;
+		overflow: hidden;
+		width: 75%;
+		text-overflow: ellipsis;
+		-webkit-text-overflow: ellipsis;
+		   -moz-text-overflow: ellipsis;
+		    -ms-text-overflow: ellipsis;
+		     -o-text-overflow: ellipsis;
+
 	}
 		.experience-gallery .place-container .content-container {
 			height: 100%;
@@ -318,8 +326,8 @@ Main App CSS
 }
 
 .experience-stream .top {
-background: url('/resources/images/Clouds.png');
-	background-position:top;
+	background: url('/resources/images/Clouds.png');
+	background-position: bottom;
 	background-repeat:repeat-x;
 	-webkit-background-size: contain;
 	-moz-background-size:contain;
@@ -377,12 +385,13 @@ background: url('/resources/images/Clouds.png');
 		height: 100%;
 		width: 85%;
 		padding: 5px;
-
+		overflow: auto;
 		box-sizing: border-box;
 		-webkit-box-sizing: border-box;
 		   -moz-box-sizing: border-box;
 		    -ms-box-sizing: border-box;
 		     -o-box-sizing: border-box;
+			 
 	}
 		.itinerary .itinerary-places .place-container{
 			float: left;
@@ -391,8 +400,8 @@ background: url('/resources/images/Clouds.png');
 
 			.itinerary .itinerary-places .photo-thumb{
 				float: left;
-				width: 75px;
-				height: 75px;
+				width: 90px;
+				height: 90px;
 				margin: 2px;
 			}
 .showcase-container{
