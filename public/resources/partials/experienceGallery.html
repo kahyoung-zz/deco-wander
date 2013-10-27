@@ -4,8 +4,7 @@
 
 		<div class="content-container">
 			<div class="photo" ng-repeat="photo in photos">
-				<div class="photo-thumb" ng-style="{'background-image': 'url(' + photo.src_big + ')'}"  draggable-photo>
-					<img ng-src="{{photo.src}}">
+				<div class="photo-thumb" ng-style="{'background-image': 'url(' + photo.tile_src + ')'}"  draggable-photo>
 				</div>
 			</div>
 			<div class="no-photos-container" ng-hide="!place.loaded || photos.length > 0">
