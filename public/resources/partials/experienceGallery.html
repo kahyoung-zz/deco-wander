@@ -1,6 +1,13 @@
 <div class="experience-gallery">
 	<div class="place-container" fb-place="place" ng-repeat="place in places">
-		<div class="place-name header" ng-bind="place.name" stop-event="click"></div>
+		<div class="place-name header">
+			<div class="header-left" ng-bind="place.name">
+			</div>
+			<div class="header-right" ng-show="place.checkins.length > 0" ng-switch on="place.checkins.length">
+				<a href="" ng-bind="place.checkins.length + ' friend has been here'" ng-switch-when="1"></a>
+				<a href="" ng-bind="place.checkins.length + ' friends have been here'" ng-switch-default></a>
+			</div>
+		</div>
 
 		<div class="content-container">
 			<div class="photo" ng-repeat="photo in photos">

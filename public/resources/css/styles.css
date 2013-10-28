@@ -284,15 +284,30 @@ Main App CSS
 		font-size: 2em;
 		line-height: 1em;
 		color: #444444;
-		overflow: hidden;
-		width: 75%;
-		text-overflow: ellipsis;
-		-webkit-text-overflow: ellipsis;
-		   -moz-text-overflow: ellipsis;
-		    -ms-text-overflow: ellipsis;
-		     -o-text-overflow: ellipsis;
-
 	}
+
+		.experience-gallery .header .header-left {
+			display: inline-block;
+			width: 65%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			-webkit-text-overflow: ellipsis;
+			   -moz-text-overflow: ellipsis;
+			    -ms-text-overflow: ellipsis;
+			     -o-text-overflow: ellipsis;
+
+		}
+
+		.experience-gallery .header .header-right {
+			float: right;
+			text-align: right;
+			padding-right: 26px;
+			font-size: 14px;
+		}
+
+			.experience-gallery .header .header-right a {
+				text-decoration: none;
+			}
 		.experience-gallery .place-container .content-container {
 			height: 100%;
 			overflow-y: scroll;

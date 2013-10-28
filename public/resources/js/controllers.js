@@ -192,7 +192,7 @@ function MapCtrl(scope, cookies, location, FB) {
 					var country = adminLevel.address_components[1].short_name;
 					var lat = adminLevel.geometry.location.lb;
 					var lon = adminLevel.geometry.location.mb;
-					FB.getPlacesByLatLngAndKeywords(lat, lon, 'club', function(response) {
+					FB.getPlacesByLatLngAndKeywords(lat, lon, 'Club', function(response) {
 						scope.$broadcast('init_region', response);
 					});
 				} else { 

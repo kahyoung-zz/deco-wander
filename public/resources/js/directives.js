@@ -98,8 +98,13 @@ angular.module('WanderApp.directives', ['ngCookies']).
               scope.places = scope.places.concat(data);
               for (var i = data.length - 1; i >= 0; i--) {
                 FB.getPhotosFromPlace(data[i].id, function(response) {
+                  var placeId = response.place;
+                    FB.getFriendsCheckedIn(placeId, function(response) {
+                      // Get amount of friends checked in
+                      scope.$broadcast('place_checkins_'+placeId, response);
+                    });
                     // Broadcast the response
-                    scope.$broadcast('incoming_photos_'+response.place, response);
+                    scope.$broadcast('incoming_photos_'+placeId, response);
                 });
               }
             }
@@ -165,6 +170,7 @@ angular.module('WanderApp.directives', ['ngCookies']).
         var photoContainer =  element.find('.content-container');
 
         scope.$on('incoming_photos_'+scope.place.id, handlePhotos);
+        scope.$on('place_checkins_'+scope.place.id, handleCheckins);
         photoContainer.bind('scroll', scrollHandler);
 
         function scrollHandler(event) {
@@ -197,6 +203,14 @@ angular.module('WanderApp.directives', ['ngCookies']).
           }
 
           scope.$apply();
+        }
+
+        function handleCheckins(event, checkinObject) {
+          var checkins = checkinObject.data;
+          if(checkins.length > 0) {
+            scope.place.checkins = checkins;
+            scope.$apply();
+          }
         }
 
       }
