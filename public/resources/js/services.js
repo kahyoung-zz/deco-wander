@@ -137,15 +137,26 @@ angular.module('WanderApp.services', []).
           var query = encodeURI('/search?type=place&q='+keywords+'&fields=id,name&center='+lat+','+lng+'&limit=25');
           FB.api(query, callback);
         },
-        getPhotosFromPlace : function(place, callback) {
-          var query = "SELECT object_id, src, src_big, images, owner FROM photo WHERE owner = " + place + ' LIMIT 24';
+        getFriendsPhotosFromPlace : function(place, callback) {
+          FB.api('/search?type=location&place=' + place + '&fields=type,id', function(response) {
+            response.place = place;
+            callback(response);
+          });
+        },
+        getPhotosFromPlace : function(place, limit, callback) {
+          if(!limit) limit = 24;
+          var query = "SELECT object_id, src, src_big, images, owner FROM photo WHERE owner = " + place + ' LIMIT ' + limit;
           this.fql(query, function(response) {
             response.place = place;
             callback(response);
           });
         },
+        getPhotoSourceById : function(ids, callback) {
+          var query = "SELECT object_id, src, src_big, images, owner FROM photo WHERE object_id IN (" + ids + ")";
+          this.fql(query, callback);
+        },
         getMorePhotosFromPlace : function(place, offset, callback) {
-          var query = "SELECT object_id, src, src_big, owner FROM photo WHERE owner = " + place + 'LIMIT 24 OFFSET ' + offset;
+          var query = "SELECT object_id, src, src_big, images, owner FROM photo WHERE owner = " + place + ' LIMIT 24 OFFSET ' + offset;
           this.fql(query, function(response) {
             response.place = place;
             callback(response);

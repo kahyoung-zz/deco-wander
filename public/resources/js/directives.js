@@ -97,24 +97,64 @@ angular.module('WanderApp.directives', ['ngCookies']).
               var data = response.data;
               scope.places = scope.places.concat(data);
               for (var i = data.length - 1; i >= 0; i--) {
-                FB.getPhotosFromPlace(data[i].id, function(response) {
+                FB.getFriendsPhotosFromPlace(data[i].id, function(response) {
+                  // 337393913034178 is id for place for testing
+                  /* 
+                    Get friends of photos and determine the following:
+                    If there's less than 25 photos
+                      Load all the photos, then load 25 from the general photos of the place
+                    If there's only 25 photos
+                      Load all the photos, then set the next page as the beginning of the general photos
+                    If there's more than 25 photos
+                      Load all the photos, then set the next page as the next page of friends' photos
+                      Continue this until there's no more friends' photos, then start using general photos
+                  */
+                  var limit = 25;
                   var placeId = response.place;
-                    FB.getFriendsCheckedIn(placeId, function(response) {
-                      // Get amount of friends checked in
-                      scope.$broadcast('place_checkins_'+placeId, response);
+                  var objects = response.data;
+                  var photos = [];
+
+                  // If there are objects, return them and push all the photos to an array
+                  if(objects.length > 0 ){
+                    for (var j = objects.length - 1; j >= 0; j--) {
+                      if(objects[j].type == 'photo') {
+                        limit--;
+                        //Extract the id out of the photo
+                        photos.push(objects[j].id);
+                      }
+                    };
+                  }
+
+                  // Only send the objects and broadcast if there are any photos
+                  if(photos.length > 0 ) {
+                    FB.getPhotoSourceById(photos, function(response) {
+                     scope.$broadcast('incoming_friends_photos_' + placeId,response);
+                     scope.$apply();
                     });
-                    // Broadcast the response
-                    scope.$broadcast('incoming_photos_'+placeId, response);
+                  }
+
+                  FB.getFriendsCheckedIn(placeId, function(response) {
+                    // Get amount of friends checked in
+                    scope.$broadcast('place_checkins_'+placeId, response);
+                    scope.$apply();
+                  });
                 });
+
+                FB.getPhotosFromPlace(data[i].id, 24, function(response) {
+                  // Broadcast the response
+                  scope.$broadcast('incoming_photos_'+response.place, response);
+                  scope.$apply();
+                });
+                
+                if(response.paging && response.paging.next) {
+                  nextPage = response.paging.next;
+                } else {
+                  nextPage = undefined;
+                }
+                loadingPage = false;
               }
             }
 
-            if(response.paging && response.paging.next) {
-              nextPage = response.paging.next;
-            } else {
-              nextPage = undefined;
-            }
-            loadingPage = false;
           }
 
           function loadMorePlaces() {
@@ -164,12 +204,14 @@ angular.module('WanderApp.directives', ['ngCookies']).
       link: function(scope, element, attrs) {
         // On new photo event, call handlePhotos function
         scope.photos = [];
+        scope.fphotos = [];
         scope.place.loaded = false;
         //Flag on whether or not photos are currently being added;
         var loadingPhotos = false;
         var photoContainer =  element.find('.content-container');
 
         scope.$on('incoming_photos_'+scope.place.id, handlePhotos);
+        scope.$on('incoming_friends_photos_'+scope.place.id, handleFriendsPhotos);
         scope.$on('place_checkins_'+scope.place.id, handleCheckins);
         photoContainer.bind('scroll', scrollHandler);
 
@@ -184,7 +226,11 @@ angular.module('WanderApp.directives', ['ngCookies']).
             }
         }
 
-        function handlePhotos(event, photos) {
+        function handleFriendsPhotos(event, photos) {
+          handlePhotos(event, photos, true);
+        }
+
+        function handlePhotos(event, photos, friends) {
           if(!scope.place.loaded) scope.place.loaded = true;
           // Handles new photos and places it into this scope
           if(photos.data.length > 0) {
@@ -197,7 +243,12 @@ angular.module('WanderApp.directives', ['ngCookies']).
                 }
               };
             };
-            scope.photos = scope.photos.concat(photos.data);
+
+            if(friends) {
+              scope.fphotos = scope.fphotos.concat(photos.data);
+            } else {
+              scope.photos = scope.photos.concat(photos.data);
+            }
           } else {
             photoContainer.unbind('scroll', scrollHandler);
           }
