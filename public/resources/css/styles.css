@@ -390,7 +390,7 @@ Main App CSS
 					border: thin dashed #333333;
 					height: 150px;
 					width: 150px;
-					bottom: 180px;
+					bottom: 100px;
 					background-image: url('/resources/images/plane-small.png');
 					background-position: center;
 					background-size: 75%;
@@ -401,6 +401,7 @@ Main App CSS
 					width: 100px;
 					background-image: url('/resources/images/drag-icon.png');
 					background-size: contain;
+					z-index: 0;
 					-webkit-background-size: contain;
 					   -moz-background-size: contain;
 					    -ms-background-size: contain;
