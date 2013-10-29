@@ -205,8 +205,8 @@ Main App CSS
 	   -moz-box-sizing: border-box;
 	    -ms-box-sizing: border-box;
 	     -o-box-sizing: border-box;
-		 
-	background:url('/resources/images/citysilhouette.png');
+	background-color: #FFFFFF;
+	background-image:url('/resources/images/citysilhouette.png');
 	background-repeat:repeat-x;
 	background-position:bottom;
 	-webkit-background-size: contain;
