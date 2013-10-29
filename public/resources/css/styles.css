@@ -359,16 +359,17 @@ Main App CSS
 			overflow-x: hidden;
 		}
 			.experience-gallery .place-container .content-container .no-photos-container{
+				float: left;
 				height: 92%;
 				width: 100%;
 				text-align: center;
 				position: relative;
 				padding: 15px 5px;
-				background-color: rgba(50, 50, 50, 0.1);
+				background-color: rgba(50, 50, 50, 0.05);
 			}
 				.experience-gallery .place-container .content-container .no-photos-container .title{
 					height: 50px;
-					font-size: 48px;
+					font-size: 26px;
 					line-height: 50px;
 				}
 

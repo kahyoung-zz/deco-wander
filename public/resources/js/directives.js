@@ -565,7 +565,7 @@ angular.module('WanderApp.directives', ['ngCookies']).
           });
           
           // Bind a 'tap' event to the outer container to handle when the user clicks on the outer container rather than swipes
-          element.find('.showcase-outer').swipe({
+          element.find('.lightbox-outer').swipe({
             tap : function(event, target) {
               closeShowcase();
             }
