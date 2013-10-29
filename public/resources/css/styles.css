@@ -44,6 +44,43 @@ body {
 	-o-filter     : blur(10px);
 	filter        : blur(10px);
 }*/
+.response-message {
+	position: absolute;
+	top: 15%;
+	right: 0;
+	z-index: 100000;
+	height: 25px;
+	padding: 10px;
+	font-size: 18px;
+	background-color: #F3F3F3;
+}
+
+	.response-message.error {
+		background-color: #FF6363;
+		color: #7D0000;
+	}
+	.response-message.alert {
+		background-color: #F0BF56;
+		color: #614200;
+	}
+	.response-message.success {
+		background-color: #7EED81;
+		color: #004D03;
+	}
+#loading { 
+	display: none;
+	position: absolute;
+	z-index: 10000;
+	width: 100%;
+	height: 100%;
+	background-color: #FFFFFF;
+	left: 0;
+	top: 0;
+	opacity: 1;
+	color: #333333;
+	text-align: center;
+	font-size: 36px;
+}
 .button {
 	cursor: pointer;
 }
@@ -94,10 +131,14 @@ body {
 	background-size: cover;
 	background-position: 50% 25%;
 	transition: width .2s, height .2s;
-			-webkit-transition: width .2s, height .2s;
-			   -moz-transition: width .2s, height .2s;
-			    -ms-transition: width .2s, height .2s;
-			     -o-transition: width .2s, height .2s;
+			-webkit-transition: width .2s, height .2s, opacity 0.2s;
+			   -moz-transition: width .2s, height .2s, opacity 0.2s;
+			    -ms-transition: width .2s, height .2s, opacity 0.2s;
+			     -o-transition: width .2s, height .2s, opacity 0.2s;
+}
+.photo-thumb.moving {
+	opacity: 0.5;
+	/*background-image: none !important;*/
 }
 
 /*
@@ -205,8 +246,7 @@ Main App CSS
 	   -moz-box-sizing: border-box;
 	    -ms-box-sizing: border-box;
 	     -o-box-sizing: border-box;
-		 
-	background:url('/resources/images/citysilhouette.png');
+	background-image:url('/resources/images/citysilhouette.png');
 	background-repeat:repeat-x;
 	background-position:bottom;
 	-webkit-background-size: contain;
@@ -318,7 +358,58 @@ Main App CSS
 			overflow-y: scroll;
 			overflow-x: hidden;
 		}
+			.experience-gallery .place-container .content-container .no-photos-container{
+				height: 92%;
+				width: 100%;
+				text-align: center;
+				position: relative;
+				padding: 15px 5px;
+				background-color: rgba(50, 50, 50, 0.1);
+			}
+				.experience-gallery .place-container .content-container .no-photos-container .title{
+					height: 50px;
+					font-size: 48px;
+					line-height: 50px;
+				}
 
+				.experience-gallery .place-container .content-container .no-photos-container .copy{
+					position: relative;
+					bottom: 0;
+					font-size: 16px;
+				}
+				.experience-gallery .place-container .content-container .no-photos-container .icon {
+					position: absolute;
+					margin: 0 auto;
+					left: 0;
+					right: 0;
+					background-repeat: no-repeat;
+					background-position: center;
+					z-index: -1;
+				}
+				.experience-gallery .place-container .content-container .no-photos-container .plane-icon {
+					border: thin dashed #333333;
+					height: 150px;
+					width: 150px;
+					bottom: 180px;
+					background-image: url('/resources/images/plane-small.png');
+					background-position: center;
+					background-size: 75%;
+				}
+				.experience-gallery .place-container .content-container .no-photos-container .drag-icon {
+					bottom: 15px;
+					height: 100px;
+					width: 100px;
+					background-image: url('/resources/images/drag-icon.png');
+					background-size: contain;
+					-webkit-background-size: contain;
+					   -moz-background-size: contain;
+					    -ms-background-size: contain;
+					     -o-background-size: contain;
+					
+				}
+					.experience-gallery .place-container .content-container .no-photos-container .drag-icon.inactive {
+						opacity: 0.5;
+					}
 	.experience-gallery .photo-thumb{
 		width: 150px;
 		height: 150px;
@@ -370,6 +461,9 @@ Main App CSS
 	.experience-stream .main-content {
 		padding: 1% 0;
 		height: 65%;
+	}
+	.experience-stream .bottom {
+		background-color: #FFFFFF;
 	}
 	.experience-stream .bottom .itinerary {
 		height: 60%;
@@ -627,9 +721,12 @@ Main App CSS
 			height: 100px;
 			width: 100px;
 			margin: 4px;
+			border: 1px dashed #777777;
 		}
+
 		.itinerary-lightbox .photo-thumb.ui-draggable-dragging {
 			opacity: 1;
+			border: none;
 		}
 		.itinerary-lightbox .photo-thumb.ui-draggable-dragging.bin-ready {
 			opacity: 0.5;
@@ -638,23 +735,35 @@ Main App CSS
 			height: 80px;
 		}
 			.lightbox-container.itinerary-lightbox .lightbox-inner .lightbox-footer .printer-container {
-				height: 100%;
+				background-image: url('/resources/images/printer-sprite.png');
+				background-position: 0px -74px;
+				opacity: 1;
 				float: left;
 			}
-			.lightbox-container.itinerary-lightbox .lightbox-inner .lightbox-footer .printer-container img{
-				height: 75%;
-				margin-top: 15%;
+			.lightbox-container.itinerary-lightbox .lightbox-inner .lightbox-footer.active-drag .printer-container {
+				background-position: 0px 10px;
+				opacity: 0.5;
 			}
+			.lightbox-container.itinerary-lightbox .lightbox-inner .lightbox-footer .icon {
+				height: 80px;
+				width: 80px;
+				background-size: 100%;
+				background-repeat: no-repeat;
+			}
+
 			.lightbox-container.itinerary-lightbox .lightbox-inner .lightbox-footer .bin-container {
-				height: 100%;
+				background-image: url('/resources/images/bin-sprite.png');
+				background-size: 65%;
+				background-position: 14px -83px;
 				float: right;
+				opacity: 0.5;
 			}
-			.lightbox-container.itinerary-lightbox .lightbox-inner .lightbox-footer .bin-container img{
-				height: 75%;
-				margin-top: 20%
+			.lightbox-container.itinerary-lightbox .lightbox-inner .lightbox-footer.active-drag .bin-container {
+				background-size: 90%;
+				background-position: 14px 4px;
+				opacity: 1;
 			}
- 
- 
+  
  .friends-outer{
 		position: absolute;
 		background: black;
