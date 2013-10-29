@@ -1,9 +1,29 @@
-<div class="itinerary">
-	<itinerary-icon></itinerary-icon>
-	<div class="itinerary-places">
-		<div class="place-container" ng-repeat="place in iplaces">
-			<div class="photo-thumb" ng-repeat="photo in place.photos" ng-style="{'background-image': 'url(' + photo.tile_src + ')'}">
-			</div>
-		</div>
-	</div>
+<div class="lightbox-container itinerary-lightbox" ng-show="showItinerary">
+	<div class="lightbox-inner">
+		<div class="lightbox-exit" ng-click="closeItinerary()">
+	    	<img src="/resources/images/cross.png">
+	    </div>
+        <div class="lightbox-header">My Itinerary </div>
+		<div class="lightbox-content">
+            <div class="place-container" ng-repeat="place in iplaces">
+                <div class="place-name">
+                    <div class="title" ng-bind="place.place.name"></div>
+                </div>
+                <div class="place-photos">
+                    <div class="photo-thumb" ng-repeat="photo in place.photos" ng-style="{'background-image': 'url(' + photo.tile_src + ')'}"  draggable-photo index="{{$index}}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="lightbox-footer" smaller-on-over="{'accept' : '.itinerary-lightbox .photo-thumb'}">
+          	<div class="printer-container">
+            	<img src="/resources/images/printer.png">
+            </div>
+                
+            <div class="bin-container" droppable-remove>
+            	<img src="/resources/images/bin.png">
+            </div>
+       </div>
+    </div>
+	<div class="lightbox-outer" ng-click="closeItinerary()">
 </div>

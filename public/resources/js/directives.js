@@ -267,14 +267,40 @@ angular.module('WanderApp.directives', ['ngCookies']).
       }
     }
   }])
-
-  .directive('itinerary', ['$timeout','$compile', function($timeout, $compile) {
+  .directive('itinerary', function() {
+    return {
+      restrict: 'E',
+      controller: 'ItineraryCtrl',
+      templateUrl: '/resources/partials/itinerary.html',
+      link: function(scope, element, attrs) {
+        scope.showItinerary = false;
+        scope.openItinerary =  openItinerary;
+        function openItinerary() {
+          scope.showItinerary = true;
+          scope.closeItinerary = closeItinerary;
+          scope.$apply();
+        }
+        function closeItinerary() {
+          delete scope.closeItinerary;
+          scope.showItinerary = false;
+        };
+      }
+    }
+  })
+  .directive('itineraryBar', ['$timeout','$compile', function($timeout, $compile) {
    return {
         restrict: 'E', 
-        templateUrl: '/resources/partials/itinerary.html',
+        requires: '^itinerary',
+        templateUrl: '/resources/partials/itineraryBar.html',
         link: function(scope, element, attrs){
           var options = {};
-          options['accept'] = '.photo-thumb';
+          options['accept'] = '.experience-gallery .photo-thumb';
+          options['over'] = function(event, ui) {
+            ui.helper.removeClass('preview');
+          };
+          options['out'] = function(event, ui) {
+            ui.helper.addClass('preview');
+          }
           options['drop'] = function(event, ui) {
             var photoScope = ui.draggable.scope();
             scope.$emit('itinerary_photo', photoScope.place, photoScope.photo);
@@ -288,12 +314,71 @@ angular.module('WanderApp.directives', ['ngCookies']).
   .directive('itineraryIcon', ['$timeout','$compile', function($timeout, $compile) {
    return {
         restrict: 'E', 
-        controller: 'ItineraryCtrl',
+        requires: '^itinerary',
         templateUrl: '/resources/partials/itineraryIcon.html',
         link: function(scope, element, attrs){
+          if(!element.parents('.showcase-container').length > 0) {
+            // Only open the itinerary if the icon isn't in a lightbox
+            element.find('.itinerary-icon-container').bind('click', openItinerary);
+          }
+          function openItinerary() {
+            scope.openItinerary();
+          }
         }
    };
  }])
+  .directive('smallerOnOver', function() {
+    return {
+      restrict: 'A',
+      link: function(scope, elm, attrs) {
+        elm.addClass('touch');
+        var options = {};
+        if(scope.$eval(attrs.smallerOnOver)) options = scope.$eval(attrs.smallerOnOver); //allow options to be passed in
+        options['over'] = function(event, ui) {
+          ui.helper.removeClass('preview');
+        };
+        options['out'] = function(event, ui) {
+          ui.helper.addClass('preview');
+        }
+        elm.droppable(options);
+      }
+    }
+  })
+  .directive('droppableRemove', function() {
+    return {
+      restrict: 'A',
+      requires: '^itinerary',
+      link: function(scope, elm, attrs) {
+        elm.addClass('touch');
+        var options = {};
+        options['accept'] = '.itinerary-lightbox .photo-thumb';
+        options['over'] = function(event, ui) {
+          ui.helper.addClass('bin-ready');
+        };
+        options['out'] = function(event, ui) {
+          ui.helper.removeClass('bin-ready');
+        }
+        options['drop'] = function(event, ui) {
+          var photoElem = ui.helper;
+          var index = photoElem.attr('index');
+          if (typeof index !== 'undefined' && index !== false) {
+            // If the index has been provided, then remove the photo from the place by the given index
+            var place = photoElem.scope().place;
+            place.photos.splice(index, 1);
+            if(place.photos.length <= 0) {
+              // If we just removed the last photo for this place, remove this place
+              if(photoElem.scope().$parent) {
+                photoElem.scope().$parent.removePlace(place);
+              }
+            }
+            photoElem.scope().$apply();
+          }
+        };
+
+        elm.droppable(options);
+      }
+    }
+  })
   .directive('draggablePhoto', function() {
     return {
       restrict: 'A',
@@ -301,11 +386,15 @@ angular.module('WanderApp.directives', ['ngCookies']).
         var options = {};
         scope.$on('get_new_photo_' + scope.photo.object_id, getNewPhoto);
         elm.addClass('touch');
-        if(scope.$eval(attrs.draggablePhoto)) options = scope.$eval(attrs.dragMan); //allow options to be passed in
+        if(scope.$eval(attrs.draggablePhoto)) options = scope.$eval(attrs.draggablePhoto); //allow options to be passed in
+        if(scope.$eval(attrs.index)) scope.photo.$index = scope.$eval(attrs.index);
         options.revert = 'invalid';
         options.scroll = false;
         options.helper = 'clone';
         options.distance = 15;
+        options['start'] = function(event, ui) {
+          ui.helper.addClass('preview');
+        }
         options.revertDuration = 200;
         //options.delay = 300;
 

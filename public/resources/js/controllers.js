@@ -108,7 +108,7 @@ function MapCtrl(scope, cookies, location, FB) {
 		streetViewControl: false,
 		mapTypeControl: false,
 	    minZoom: 2,
-	    maxZoom: 6,
+	    maxZoom: 10,
 	    zoom: 2,
 	    backgroundColor: '#FFFFFF',
 	    center: new google.maps.LatLng(45.0000, 135.000),
@@ -192,7 +192,7 @@ function MapCtrl(scope, cookies, location, FB) {
 					var country = adminLevel.address_components[1].short_name;
 					var lat = adminLevel.geometry.location.lb;
 					var lon = adminLevel.geometry.location.mb;
-					FB.getPlacesByLatLngAndKeywords(lat, lon, 'Club', function(response) {
+					FB.getPlacesByLatLngAndKeywords(lat, lon, 'Park', function(response) {
 						scope.$broadcast('init_region', response);
 					});
 				} else { 
@@ -442,6 +442,8 @@ function ItineraryCtrl(scope, rootScope, Facebook) {
 	scope.iplaces = [];
 	var indexing = [];
 
+	scope.removePlace = removePlace;
+
 	function addToItinerary(event, place, photo) {
 		var index = indexing.indexOf(place.id);
 		if(index == -1) {
@@ -461,6 +463,15 @@ function ItineraryCtrl(scope, rootScope, Facebook) {
 
 			// Only add the photo if it is completely new
 			scope.iplaces[index].photos.push(photo);
+		}
+	}
+
+	function removePlace(place) {
+		var index = scope.iplaces.indexOf(place);
+		if(index != -1) {
+			scope.iplaces.splice(index, 1);
+			indexing.splice(index, 1);
+			scope.$apply();
 		}
 	}
 }

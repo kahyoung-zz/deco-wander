@@ -93,6 +93,11 @@ body {
 .photo-thumb {
 	background-size: cover;
 	background-position: 50% 25%;
+	transition: width .2s, height .2s;
+			-webkit-transition: width .2s, height .2s;
+			   -moz-transition: width .2s, height .2s;
+			    -ms-transition: width .2s, height .2s;
+			     -o-transition: width .2s, height .2s;
 }
 
 /*
@@ -318,8 +323,20 @@ Main App CSS
 		width: 150px;
 		height: 150px;
 	}
-		.experience-gallery .photo-thumb.ui-draggable-dragging {
+		.photo-thumb.ui-draggable-dragging {
 			opacity: 0.5;
+		}
+		.photo-thumb.preview.ui-draggable-dragging {
+			opacity: 1;
+			height: 400px;
+			width: 400px;
+			background-size: contain;
+			-webkit-background-size: contain;
+			   -moz-background-size: contain;
+			    -ms-background-size: contain;
+			     -o-background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center;
 		}
 	.experience-gallery .photo-thumb img{
 		display: none;
@@ -334,7 +351,7 @@ Main App CSS
 
 .experience-stream {
 	position: absolute;
-	z-index: 10000;
+	z-index: 100;
 	width: 100%;
 	height: 100%;
 	background-color: #F8F8F8;
@@ -397,7 +414,7 @@ Main App CSS
 
 	.itinerary .itinerary-places{
 		height: 100%;
-    	overflow-x: scroll; 
+    	width: 90%;
 		overflow-y: hidden;   
     	white-space: nowrap;
 		float: left;	
@@ -422,6 +439,7 @@ Main App CSS
 				height: 90px;
 				margin: 2px;
 			}
+
 .showcase-container{
 	position: absolute;
 	z-index: 100;
@@ -539,129 +557,102 @@ Main App CSS
 		
 		
 
-	.showcase-container .showcase-outer{
+	.lightbox-outer{
 		position: absolute;
 		background: black;
 		opacity: 0.8;
 		min-width: 100%;
 		min-height: 100%;
+		z-index: 10;
 	}
-	
-	.showcase-container .showcase-outer{
-		position: absolute;
-		background: black;
-		opacity: 0.8;
-		min-width: 100%;
-		min-height: 100%;
-	}
-	
-	
-	
-	.showcase-container .showcase-outer{
-		position: absolute;
-		background: black;
-		opacity: 0.8;
-		min-width: 100%;
-		min-height: 100%;
-	}
- .itinerary-outer{
-		position: absolute;
-		background: black;
-		opacity: 0.8;
-		width: 100%;
-		height: 100%;
-	}
-.itinerarylightbox-container {
+.lightbox-container {
 	position: absolute;
-	z-index: 100;
+	z-index: 1000;
 	min-width: 100%;
 	min-height: 100%;
 }
 
-.itinerarylightbox-inner{
-	background:#FFF;
-	position: absolute;
-	margin:auto;
-	width: 400px;
-	height: 65%;
-	min-height: 400px;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	z-index: 50;	
-}
+	.lightbox-inner{
+		background:#FFF;
+		position: absolute;
+		margin:auto;
+		padding: 6px 10px;
+		min-height: 400px;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 50;	
+	}
+	.lightbox-container.itinerary-lightbox .lightbox-inner {
+		width: 580px;
+		height: 580px;
+	}
 
-.itinerarylightbox-container .itinerarylightbox-inner-container .itinerarylightbox-inner .lightboxtitle {
-	font-weight:bold;
-	margin-top:45px;
-	margin-left: 45px;
-	font-size:24px;
-	color:#666;
-}
+		.lightbox-container .lightbox-inner .lightbox-header {
+			background-color: #FFFFFF;
+			height: 40px;
+			line-height: 40px;
+			font-weight:bold;
+			font-size:26px;
+			color:#666;
+			margin-bottom: 6px;
+		}
 
-.itinerarylightbox-container .itinerarylightbox-inner-container .itinerarylightbox-inner .showcase-exit {
-	position: absolute;
-	z-index: 10;
-	right: -10px;
-	top: -10px;
-	cursor: pointer;
-}
-.itinerarylightbox-container .itinerarylightbox-inner-container .itinerarylightbox-inner .showcase-information {
-	height: 80%;
-	overflow-x: auto;
-	
-}
+		.lightbox-container .lightbox-inner .lightbox-exit {
+			position: absolute;
+			z-index: 10;
+			right: -10px;
+			top: -10px;
+			cursor: pointer;
+		}
+		.lightbox-container .lightbox-inner .lightbox-content {
+			height: 100%;
+			overflow: auto;
+		}
+		.lightbox-container.itinerary-lightbox .lightbox-inner .lightbox-content {
+			height: 460px;
+		}
 
-.itinerarylightbox-container .itinerarylightbox-inner-container .itinerarylightbox-inner .showcase-information .place {
-	position: relative;
-	height: auto;
-	overflow: auto;
-}
-
-.itinerarylightbox-container .itinerarylightbox-inner-container .itinerarylightbox-inner .showcase-information .photos {
-	margin-left: 45px;	
-	height: auto;
-}
-
-.itinerarylightbox-container .itinerarylightbox-inner-container .itinerarylightbox-inner .showcase-information .photos img {
-	float: left;
-	width: 40px;
-	height: 40px;
-	margin: 2px;
-	
-}
-
-.itinerarylightbox-container .itinerarylightbox-inner-container .itinerarylightbox-inner .showcase-information .title {
-	margin-left: 45px;
-	margin-top:10px;
+.lightbox-container.itinerary-lightbox .lightbox-inner .lightbox-content .place-container {
 	margin-bottom: 10px;
 }
+.lightbox-container.itinerary-lightbox .lightbox-inner .lightbox-content .place-name{
+	margin-bottom: 4px;
+	font-size: 18px;
+}
 
-.printer-container img {
-	position: absolute;
-	height: auto;
-	width: auto;
-	max-height: 50px;
-	max-width: 50px;
-	bottom: 0;
-	left: 0;
-	margin-bottom: 2%;
-	margin-left: 2%;
-	cursor:pointer;
-}
-.bin-container img {
-	position: absolute;
-	height: auto;
-	width: auto;
-	max-height: 50px;
-	max-width: 50px;
-	bottom: 0;
-	right: 0;
-	margin-bottom: 2%;
-	margin-right: 2%;
-	cursor:pointer;
-}
+		.itinerary-lightbox .photo-thumb {
+			display: inline-block;
+			height: 100px;
+			width: 100px;
+			margin: 4px;
+		}
+		.itinerary-lightbox .photo-thumb.ui-draggable-dragging {
+			opacity: 1;
+		}
+		.itinerary-lightbox .photo-thumb.ui-draggable-dragging.bin-ready {
+			opacity: 0.5;
+		}
+		.lightbox-container.itinerary-lightbox .lightbox-inner .lightbox-footer {
+			height: 80px;
+		}
+			.lightbox-container.itinerary-lightbox .lightbox-inner .lightbox-footer .printer-container {
+				height: 100%;
+				float: left;
+			}
+			.lightbox-container.itinerary-lightbox .lightbox-inner .lightbox-footer .printer-container img{
+				height: 75%;
+				margin-top: 15%;
+			}
+			.lightbox-container.itinerary-lightbox .lightbox-inner .lightbox-footer .bin-container {
+				height: 100%;
+				float: right;
+			}
+			.lightbox-container.itinerary-lightbox .lightbox-inner .lightbox-footer .bin-container img{
+				height: 75%;
+				margin-top: 20%
+			}
  
  
  .friends-outer{
