@@ -13,13 +13,21 @@ angular.module('WanderApp.directives', ['ngCookies']).
     return {
       restrict: 'A',
       link: function(scope, elm, attrs) {
+        console.log(elm.offset());
         var options = {};
+
+        scope.$on('revert_dragman', revertDragman);
+        
         elm.addClass('touch');
         if(scope.$eval(attrs.dragMan)) options = scope.$eval(attrs.dragMan); //allow options to be passed in
         options.revert = 'invalid';
         options.scroll = false;
         options.revertDuration = 200;
         elm.draggable(options);
+
+        function revertDragman(event) {
+          elm.animate({top: 0, left: 0}, "fast");
+        }
       }
     };
   })
@@ -30,7 +38,6 @@ angular.module('WanderApp.directives', ['ngCookies']).
         var options = scope.$eval(attrs.mapDroppable); //allow options to be passed in
         options.drop = function(event, ui) {
           scope.loadPlacesByPosition(event.pageX, event.pageY);
-          ui.draggable.draggable('option', 'revert', true);
         };
         elm.droppable(options);
       }
@@ -82,6 +89,7 @@ angular.module('WanderApp.directives', ['ngCookies']).
               openStream();
             } else {
               alert('This region has no places!');
+              scope.$emit('revert_dragman', true);
             }
 
             if(region.paging) {
@@ -170,6 +178,7 @@ angular.module('WanderApp.directives', ['ngCookies']).
             scope.close = closeStream;
           }
           function closeStream() {
+            scope.$emit('revert_dragman', true);
             scope.showStream = false;
           }
         }
@@ -334,6 +343,7 @@ angular.module('WanderApp.directives', ['ngCookies']).
         elm.addClass('touch');
         var options = {};
         if(scope.$eval(attrs.smallerOnOver)) options = scope.$eval(attrs.smallerOnOver); //allow options to be passed in
+        options['activeClass'] = 'active-drag';
         options['over'] = function(event, ui) {
           ui.helper.removeClass('preview');
         };
@@ -359,11 +369,16 @@ angular.module('WanderApp.directives', ['ngCookies']).
           ui.helper.removeClass('bin-ready');
         }
         options['drop'] = function(event, ui) {
+          // Remove active drag class from the parent
+          $(this).closest('.active-drag').removeClass('active-drag');
+          
           var photoElem = ui.helper;
           var index = photoElem.attr('index');
           if (typeof index !== 'undefined' && index !== false) {
             // If the index has been provided, then remove the photo from the place by the given index
             var place = photoElem.scope().place;
+            console.log(place.photos);
+            place.photos[index].inItinerary = false;
             place.photos.splice(index, 1);
             if(place.photos.length <= 0) {
               // If we just removed the last photo for this place, remove this place
@@ -393,11 +408,16 @@ angular.module('WanderApp.directives', ['ngCookies']).
         options.helper = 'clone';
         options.distance = 15;
         options['start'] = function(event, ui) {
+          var original = $(event.target);
+          original.addClass('moving');
           ui.helper.addClass('preview');
-        }
+        };
+        options['stop'] = function(event, ui) {
+          var original = $(event.target);
+          original.removeClass('moving');
+        };
         options.revertDuration = 200;
         //options.delay = 300;
-
         elm.draggable(options).click(function() {
             if ( $(this).is('.ui-draggable-dragging') ) {
               return;
@@ -433,6 +453,79 @@ angular.module('WanderApp.directives', ['ngCookies']).
         }
       }
     };
+  })
+  .directive('responseMessage', function() {
+    return {
+      scope: true,
+      restrict: 'E',
+      templateUrl: '/resources/partials/responseMessage.html',
+      link: function(scope, element, attrs) {
+        var container = element.find('.response-message');
+        var time = 200;
+        var delay = 1500;
+        scope.response = {};
+
+        container.hide();
+
+        scope.$on('response_message', handleResponse);
+
+        function openMessage(callback) {
+          var width = container.outerWidth();
+          if(!container.is(":visible")) {
+            container.css('right', '-' + width + 'px');
+            container.show();
+            container.animate({
+              right : 0+"px"
+            }, time, callback);
+          }
+        }
+
+        function closeMessage(callback) {
+          var width = container.outerWidth();
+          if(container && $(container).is(":visible")) {
+            container.animate({
+              right : "-"+width+"px"
+            }, time, function() {
+              container.hide();
+              if(callback) callback();
+            });
+          }
+        }
+        function handleResponse(event, type, message, autoclose) {
+          // If message is visible, close it first
+          if(!autoclose) autoclose = false;
+          if(type != 'close') {
+            if(container.is(":visible")) {
+              closeMessage(function() {
+                scope.response.type = type;
+                scope.response.message = message;
+                if(autoclose) {
+                  openMessage(closeAfterTime(delay));
+                } else {
+                  openMessage();
+                }
+              });
+            } else {
+              // Just run open function
+              scope.response.type = type;
+              scope.response.message = message;
+              scope.$apply();
+              if(autoclose) {
+                openMessage(closeAfterTime(delay));
+              } else {
+                openMessage();
+              }
+            }
+          } else {
+            closeMessage();
+          }
+        }
+
+        function closeAfterTime(time, callback) {
+          window.setTimeout(closeMessage, time);
+        }
+      }
+    }
   })
   .directive('photoShowcase', ['$timeout','$compile', 'Facebook', function($timeout, $compile, FB) {
    return {

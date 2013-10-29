@@ -10,7 +10,7 @@ function WanderCtrl(scope, rootScope, cookies, FB) {
 	function closeStream() {
 		scope.$broadcast('close_stream', true);
 	}
-
+	rootScope.loading = false;
 	scope.logout = FB.logout;
 	scope.login = FB.loginNoPopup;
 	scope.closeStream = closeStream;
@@ -26,6 +26,26 @@ function LoginCtrl(scope) {
 
 
 function MapCtrl(scope, cookies, location, FB) {
+	// Add spinner to loading screen
+	var opts = {
+	  lines: 13, // The number of lines to draw
+	  length: 20, // The length of each line
+	  width: 8, // The line thickness
+	  radius: 30, // The radius of the inner circle
+	  corners: 1, // Corner roundness (0..1)
+	  rotate: 0, // The rotation offset
+	  direction: 1, // 1: clockwise, -1: counterclockwise
+	  color: '#FFFFFF', // #rgb or #rrggbb or array of colors
+	  speed: 1, // Rounds per second
+	  trail: 60, // Afterglow percentage
+	  shadow: false, // Whether to render a shadow
+	  hwaccel: false, // Whether to use hardware acceleration
+	  className: 'spinner', // The CSS class to assign to the spinner
+	  zIndex: 2e9, // The z-index (defaults to 2000000000)
+	  top: 'auto', // Top position relative to parent in px
+	  left: 'auto' // Left position relative to parent in px
+	};
+	var spinner = new Spinner(opts).spin($('#loading')[0]);
 	FB.getLoginStatus(function(response) {
 		if (response.status != 'connected') {
 			window.location = FB.getRedirectURL();
@@ -183,24 +203,38 @@ function MapCtrl(scope, cookies, location, FB) {
     	var geocoderOptions = {
 			'latLng' : latLng
 		}
-
+		$("#loading").fadeIn(2000);
 		geocoder.geocode(geocoderOptions, function(results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
 				if(results[1]) {
+					scope.$broadcast('response_message', 'alert', "Loading this region...");
 					var adminLevel = results[results.length - 2];
 					var region = adminLevel.address_components[0].short_name;
 					var country = adminLevel.address_components[1].short_name;
 					var lat = adminLevel.geometry.location.lb;
 					var lon = adminLevel.geometry.location.mb;
 					FB.getPlacesByLatLngAndKeywords(lat, lon, 'Park', function(response) {
+						scope.$broadcast('response_message', 'close', "Loading this region...");
 						scope.$broadcast('init_region', response);
 					});
 				} else { 
 					console.log('Geocoder: No results found');
+					scope.$broadcast('revert_dragman', true);
+					scope.$broadcast('response_message', 'alert', "Can't find any regions near your selection", true);
+					scope.$apply();
 				}
 			} else {
+				if(status == 'ZERO_RESULTS') {
+					scope.$broadcast('revert_dragman', true);
+					scope.$broadcast('response_message', 'alert', "Can't find any regions near your selection", true);
+					scope.$apply();
+				}
+				scope.$broadcast('revert_dragman', true);
 				console.log('Geocoder has failed because: ' + status);
 			}
+			window.setTimeout(function() {
+				$("#loading").stop().fadeOut(300);
+			});
 		});
 	};
 }
@@ -453,6 +487,8 @@ function ItineraryCtrl(scope, rootScope, Facebook) {
 			scope.iplaces[last] = {};
 			scope.iplaces[last].place = place;
 			scope.iplaces[last].photos = [photo];
+			// Broadcast creation of a new place to your itinerary
+			scope.$broadcast('response_message', 'success', "Added <strong>" + place.name + "</strong> to your itinerary!", true);
 		} else {
 			// If the photo already exists, then do nothing
 			for (var i = scope.iplaces[index].photos.length - 1; i >= 0; i--) {
@@ -464,6 +500,8 @@ function ItineraryCtrl(scope, rootScope, Facebook) {
 			// Only add the photo if it is completely new
 			scope.iplaces[index].photos.push(photo);
 		}
+		// Flag the photo as being in the itinerary
+		photo.inItinerary = true;
 	}
 
 	function removePlace(place) {

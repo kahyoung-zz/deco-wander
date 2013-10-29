@@ -10,16 +10,32 @@
 		</div>
 
 		<div class="content-container">
-			<div class="photo" ng-repeat="photo in fphotos">
+			<div class="photo" ng-repeat="photo in fphotos" ng-hide="photo.inItinerary">
 				<div class="photo-thumb" ng-style="{'background-image': 'url(' + photo.tile_src + ')'}"  draggable-photo>
 				</div>
 			</div>
-			<div class="photo" ng-repeat="photo in photos">
+			<div class="photo" ng-repeat="photo in photos" ng-hide="photo.inItinerary">
 				<div class="photo-thumb" ng-style="{'background-image': 'url(' + photo.tile_src + ')'}"  draggable-photo>
 				</div>
 			</div>
 			<div class="no-photos-container" ng-hide="!place.loaded || photos.length > 0">
-				This place has no photos!!
+				<div class="no-photos title">
+					No Photos Available
+				</div>
+				<div class="no-photos text">
+					<div class="no-photos copy">
+						No photos are available for this location as of yet
+					</div>
+					<div class="no-photos copy">
+						Tap to add, or drag into your Itinerary
+					</div>
+				</div>
+				<div class="plane-icon photo-thumb icon" draggable-photo>
+				</div>
+				<div class="no-photos">
+					<div class="drag-icon icon inactive">
+					</div>
+				</div>
 			</div>
 			<div class="no-photos-container" ng-hide="place.loaded">
 				Loading Photos...
