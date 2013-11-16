@@ -1,0 +1,38 @@
+.header {
+	margin-bottom: 16px;
+}
+	.header .header-left {
+		display: inline-block;
+	}
+		.header .header-left .logo {
+			width: 200px;
+		}
+			.header .header-left .logo img {
+				width: 100%;
+				height: auto;
+			}
+	.header .header-right {
+		float: right;
+	}
+.place {
+	float: left;
+	margin-bottom: 10px;
+	font-size: 14px;
+	font-weight: bold;
+	clear: both;
+}
+	.place .photos {
+		margin-top: 5px;
+	}
+		.place .photos .photo {
+			float: left;
+			margin: 7px;
+			height: 150px;
+			width: 150px;
+			background-repeat: no-repeat;
+			background-size: cover;
+			-webkit-background-size: cover;
+			   -moz-background-size: cover;
+			    -ms-background-size: cover;
+			     -o-background-size: cover;
+		}

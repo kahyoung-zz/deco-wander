@@ -30,10 +30,10 @@
 						Tap to add, or drag into your Itinerary
 					</div>
 				</div>
-				<div class="plane-icon photo-thumb icon" draggable-photo>
+				<div class="plane-icon photo-thumb icon" draggable-photo="{dragTemplate : true}">
 				</div>
 				<div class="no-photos">
-					<div class="drag-icon icon inactive">
+					<div class="drag-icon icon inactive" ng-hide="$root.emptyHasBeenDragged">
 					</div>
 				</div>
 			</div>

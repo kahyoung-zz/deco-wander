@@ -75,11 +75,10 @@ angular.module('WanderApp.directives', ['ngCookies']).
           var nextPage;
           var currentPage;
           var loadingPage = false;
-
           scope.$on('init_region', initRegion);
           scope.$on('close_stream', closeStream);
           scope.$on('load_more_places', loadMorePlaces);
-
+          scope.emptyHasBeenDragged = true;
           function initRegion(event, region) {
             scope.places = [];
 
@@ -394,12 +393,60 @@ angular.module('WanderApp.directives', ['ngCookies']).
       }
     }
   })
-  .directive('draggablePhoto', function() {
+  .directive('printable', function() {
+    return {
+      restrict: 'A',
+      link: function(scope, elm, attrs) {
+        var html = '';
+        console.log(scope);
+
+        function renderPlaces(places) {
+          var html = "<div class='header'>"
+                      +"<div class='header-left'>"
+                        +"<div class='logo'>"
+                          +"<img src='/resources/images/logo_transparent.png'>"
+                        +"</div>"
+                      +"</div>"
+                      +"<div class='header-right'>"
+                        +"Kenneth Ah Young"
+                      +"</div>"
+                    +"</div>";
+          for(var i in places) {
+            var place = places[i];
+            var placeHtml = "<div class='place'>"
+                          + "<div class='title'>" 
+                            + place.place.name
+                          +"</div>"
+                          +"<div class='photos'>";
+            for(var j in place.photos) {
+              var photo = place.photos[j];
+              var imageSrc = photo.src_big;
+              var photoHtml = "<div class='photo' style='background-image: url("+ imageSrc +");'>"
+                              +"</div>";
+              placeHtml += photoHtml;
+            }
+
+            placeHtml += "</div></div>";
+            html += placeHtml;
+          }
+          return html;
+        }
+        elm.bind('click', function() {
+          window.frames["print_frame"].document.body.innerHTML = renderPlaces(scope.iplaces);
+          window.frames["print_frame"].focus();
+          window.frames["print_frame"].print();
+        });
+      }
+    }
+  })
+  .directive('draggablePhoto', [ '$rootScope', function(rootScope) {
     return {
       restrict: 'A',
       link: function(scope, elm, attrs) {
         var options = {};
-        scope.$on('get_new_photo_' + scope.photo.object_id, getNewPhoto);
+        if(scope.photo) {
+          scope.$on('get_new_photo_' + scope.photo.object_id, getNewPhoto);
+        }
         elm.addClass('touch');
         if(scope.$eval(attrs.draggablePhoto)) options = scope.$eval(attrs.draggablePhoto); //allow options to be passed in
         if(scope.$eval(attrs.index)) scope.photo.$index = scope.$eval(attrs.index);
@@ -411,13 +458,18 @@ angular.module('WanderApp.directives', ['ngCookies']).
           var original = $(event.target);
           original.addClass('moving');
           ui.helper.addClass('preview');
+          if(options.dragTemplate) {
+            if(!rootScope.emptyHasBeenDragged) {
+              rootScope.$apply(rootScope.emptyHasBeenDragged = true);
+            }
+          }
         };
         options['stop'] = function(event, ui) {
           var original = $(event.target);
           original.removeClass('moving');
         };
         options.revertDuration = 200;
-        //options.delay = 300;
+        options.delay = 300;
         elm.draggable(options).click(function() {
             if ( $(this).is('.ui-draggable-dragging') ) {
               return;
@@ -425,6 +477,10 @@ angular.module('WanderApp.directives', ['ngCookies']).
             // click action here
             scope.$emit('showcase_init', scope.place, scope.photo);
         });
+
+        function toggleEmptyHasBeenDragged(event, value) {
+          scope.$apply(scope.emptyHasBeenDragged = value);
+        };
 
         function getNewPhoto(event, type) {
           var index = scope.photos.indexOf(scope.photo);
@@ -453,7 +509,7 @@ angular.module('WanderApp.directives', ['ngCookies']).
         }
       }
     };
-  })
+  }])
   .directive('responseMessage', function() {
     return {
       scope: true,
@@ -587,11 +643,14 @@ angular.module('WanderApp.directives', ['ngCookies']).
           }
 
           function getNewPhoto(photoId, type) {
+            scope.$apply(scope.showcase.photo =  {});
+            scope.loadingShowcasePhoto = true;
             scope.$broadcast('get_new_photo_' + photoId, type);
             scope.$apply();
           }
 
           function displayPhoto(event, photo) {
+            scope.$apply(scope.showcase.photo = {});
             FB.getUser(photo.owner, function(response) {
               if(scope.showcase){
                 scope.showcase.user = {};
@@ -619,4 +678,15 @@ angular.module('WanderApp.directives', ['ngCookies']).
           }
         }
    };
- }]);
+ }])
+.directive('loadPlaceholder', function() {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        var hideVariable = attrs.ngHide;
+        element.bind("load", function(e) {
+          scope.$apply(scope[hideVariable] = false);
+        });
+      }
+    }
+  });

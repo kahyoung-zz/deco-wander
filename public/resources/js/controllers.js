@@ -25,7 +25,7 @@ function LoginCtrl(scope) {
 }
 
 
-function MapCtrl(scope, cookies, location, FB) {
+function MapCtrl(scope, cookies, location, FB, Location) {
 	var map;
 	var geocoder = new google.maps.Geocoder();
 
@@ -85,14 +85,6 @@ function MapCtrl(scope, cookies, location, FB) {
 			stylers: [
 				{
 					color: "#FDFDFD",
-				}
-			]
-		},
-		{
-			featureType: "administrative.locality",
-			stylers: [
-				{
-					visibility: "off"
 				}
 			]
 		}
@@ -182,13 +174,15 @@ function MapCtrl(scope, cookies, location, FB) {
 		geocoder.geocode(geocoderOptions, function(results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
 				if(results[1]) {
+					Location.setRegion(results[1].formatted_address);
 					scope.$broadcast('response_message', 'alert', "Loading this region...");
 					var adminLevel = results[results.length - 2];
 					var region = adminLevel.address_components[0].short_name;
 					var country = adminLevel.address_components[1].short_name;
-					var lat = adminLevel.geometry.location.lb;
-					var lon = adminLevel.geometry.location.mb;
+					var lat = adminLevel.geometry.location.ob;
+					var lon = adminLevel.geometry.location.pb;
 					FB.getPlacesByLatLngAndKeywords(lat, lon, 'Park', function(response) {
+
 						scope.$broadcast('response_message', 'close', "Loading this region...");
 						scope.$broadcast('init_region', response);
 					});
@@ -446,16 +440,23 @@ function MapCtrl(scope, cookies, location, FB) {
 // 	}
 // }
 
-function ItineraryCtrl(scope, rootScope, Facebook) {
+function ItineraryCtrl(scope, rootScope, Facebook, Location) {
 	scope.$on('itinerary_photo', addToItinerary);
 	scope.iplaces = [];
 	var indexing = [];
 
 	scope.removePlace = removePlace;
+	scope.printItinerary = printItinerary;
 
+	function printItinerary(selector) {
+		
+	}
 	function addToItinerary(event, place, photo) {
+		place = angular.copy(place);
 		var index = indexing.indexOf(place.id);
 		if(index == -1) {
+			var displayName = place.name;
+			place.name = place.name + ', ' + Location.getRegion();
 			var last = indexing.length;
 			indexing.push(place.id);
 
@@ -463,7 +464,7 @@ function ItineraryCtrl(scope, rootScope, Facebook) {
 			scope.iplaces[last].place = place;
 			scope.iplaces[last].photos = [photo];
 			// Broadcast creation of a new place to your itinerary
-			scope.$broadcast('response_message', 'success', "Added <strong>" + place.name + "</strong> to your itinerary!", true);
+			scope.$broadcast('response_message', 'success', "Added <strong>" + displayName + "</strong> to your itinerary!", true);
 		} else {
 			// If the photo already exists, then do nothing
 			for (var i = scope.iplaces[index].photos.length - 1; i >= 0; i--) {
@@ -489,8 +490,8 @@ function ItineraryCtrl(scope, rootScope, Facebook) {
 	}
 }
 
-ItineraryCtrl.$inject = ['$scope', '$rootScope', 'Facebook'];
+ItineraryCtrl.$inject = ['$scope', '$rootScope', 'Facebook', 'Location'];
 WanderCtrl.$inject = ['$scope', '$rootScope', '$cookies', 'Facebook'];
 LoginCtrl.$inject = ['$scope'];
-MapCtrl.$inject = ['$scope', '$cookies', '$location', 'Facebook'];
+MapCtrl.$inject = ['$scope', '$cookies', '$location', 'Facebook', 'Location'];
 // ExperienceCtrl.$inject = ['$scope', '$rootScope', 'Facebook'];

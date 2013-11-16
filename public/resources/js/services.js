@@ -70,7 +70,7 @@ angular.module('WanderApp.services', []).
         method: 'fql.multiquery',
         queries: {
           'checkins' : 'SELECT author_uid, checkin_id, message FROM checkin WHERE checkin_id IN (' + sorted.checkins + ')',
-          'photos' : 'SELECT owner, place_id, src, src_big, pid FROM photo WHERE object_id IN (' + sorted.photos + ')',
+          'photos' : 'SELECT owner, place_id, src, src_big, pid, src_big_width, src_big_height FROM photo WHERE object_id IN (' + sorted.photos + ')',
           'statuses' : 'SELECT uid, place_id, message FROM status WHERE status_id IN (' + sorted.statuses + ')',
           'places' : 'SELECT page_id, name, is_city, display_subtext FROM place WHERE page_id IN (SELECT place_id FROM #photos)'
         }
@@ -145,7 +145,7 @@ angular.module('WanderApp.services', []).
         },
         getPhotosFromPlace : function(place, limit, callback) {
           if(!limit) limit = 24;
-          var query = "SELECT object_id, src, src_big, images, owner FROM photo WHERE owner = " + place + ' LIMIT ' + limit;
+          var query = "SELECT object_id, src, src_big, images, owner, src_big_width, src_big_height FROM photo WHERE owner = " + place + ' LIMIT ' + limit;
           this.fql(query, function(response) {
             response.place = place;
             callback(response);
@@ -173,6 +173,18 @@ angular.module('WanderApp.services', []).
         }
     }
   }])
+  .service('Location', function() {
+    var region;
+
+    return {
+      setRegion : function (_region) {
+        region = _region;
+      },
+      getRegion : function() {
+        return region;
+      }
+    }
+  })
   .service('Reccommender', ['$rootScope', '$window', '$cookies', '$location', function($rootScope, $window, $cookies, $location) {
     /*
     *
