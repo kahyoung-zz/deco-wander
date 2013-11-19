@@ -7,6 +7,15 @@ html,body, .main, .view, .sub-main{
 	max-height: 100%;
 	
 }
+html *, body * {
+	-ms-content-zooming: none;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
 body {
 	font: 14px/1.5em "Lucida Grande", Arial, sans-serif;
 	overflow: hidden;
