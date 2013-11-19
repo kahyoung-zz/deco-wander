@@ -408,7 +408,8 @@ angular.module('WanderApp.directives', ['ngCookies']).
                         +"</div>"
                       +"</div>"
                       +"<div class='header-right'>"
-                        +"Kenneth Ah Young"
+                        +"<div>Itinerary for:</div>"
+                        +"<div>Kenneth Ah Young</div>"
                       +"</div>"
                     +"</div>";
           for(var i in places) {
